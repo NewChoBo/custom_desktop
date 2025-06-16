@@ -45,7 +45,9 @@ function setWindowPosition(window: BrowserWindow, displayIndex: number = 0): voi
     const { x, y, width, height } = calculateWindowPosition(appConfig.window, displayIndex);
 
     window.setSize(width, height);
-    window.setPosition(x, y);    // 기타 설정 적용
+    window.setPosition(x, y);
+
+    // 기타 설정 적용
     window.setAlwaysOnTop(appConfig.window.windowLevel === 'alwaysOnTop');
     window.setResizable(appConfig.window.resizable);
 
@@ -140,7 +142,9 @@ function createWindow(displayIndex: number = 0, isMain: boolean = true): Browser
     window.webContents.openDevTools();
   } else {
     window.loadFile(path.join(__dirname, '../dist/index.html'));
-  }  // Show window when ready
+  }
+
+  // Show window when ready
   window.once('ready-to-show', () => {
     window.show();
 
@@ -555,7 +559,8 @@ function createSettingsWindow(): void {
     maximizable: true,
     minimizable: true,
     closable: true,
-    alwaysOnTop: false, modal: true,
+    alwaysOnTop: false,
+    modal: true,
     parent: mainWindow || undefined,
     webPreferences: {
       nodeIntegration: false,
