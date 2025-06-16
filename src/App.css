@@ -19,8 +19,10 @@
 
 /* 커스텀 스크롤바 스타일 */
 * {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE/Edge */
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE/Edge */
 }
 
 *::-webkit-scrollbar {
@@ -148,7 +150,7 @@
 .app-title {
   font-size: clamp(2rem, 5vw, 3.5rem);
   margin-bottom: 1rem;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
   font-weight: 700;
   letter-spacing: -0.02em;
 }
@@ -236,7 +238,7 @@
 .success {
   color: #4ade80;
   font-weight: bold;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
   font-size: 1.1em;
 }
 
@@ -246,6 +248,7 @@
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -257,12 +260,12 @@
   .App-header {
     padding: 1.5rem;
   }
-  
+
   .info-box {
     padding: 1.5rem;
     margin: 1.5rem 0;
   }
-  
+
   .project-info-item {
     padding: 0.6rem 0.8rem;
     font-size: 1rem;
@@ -274,7 +277,7 @@
   .App-header {
     animation: none;
   }
-  
+
   .info-box,
   .project-info-item {
     transition: none;
@@ -388,16 +391,16 @@
   .icon-emoji {
     font-size: 24px;
   }
-  
+
   .icon-thumbnail {
     max-width: 30px;
     max-height: 30px;
   }
-  
+
   .icon-title {
     font-size: 10px;
   }
-  
+
   .icon-item {
     min-height: 60px;
     padding: 6px;
@@ -405,7 +408,9 @@
 }
 
 /* 로딩, 에러, 빈 상태 스타일 */
-.loading, .error, .no-icons {
+.loading,
+.error,
+.no-icons {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -427,8 +432,13 @@
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .loading p {

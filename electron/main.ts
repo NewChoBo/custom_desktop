@@ -1,8 +1,8 @@
-import { app, BrowserWindow, Tray, Menu, nativeImage, ipcMain, shell } from 'electron';
-import * as path from 'path';
-import * as fs from 'fs';
 import { exec } from 'child_process';
-import { loadConfig, calculateWindowPosition, AppConfig } from './config-loader';
+import { app, BrowserWindow, ipcMain, Menu, nativeImage, shell, Tray } from 'electron';
+import * as fs from 'fs';
+import * as path from 'path';
+import { AppConfig, calculateWindowPosition, loadConfig } from './config-loader';
 
 let mainWindow: BrowserWindow | null = null;
 let tray: Tray | null = null;
@@ -16,25 +16,25 @@ function setWindowPosition(window: BrowserWindow): void {
   try {
     // 설정에서 위치 계산
     const position = calculateWindowPosition(appConfig.window);
-    
+
     window.setSize(appConfig.window.width, appConfig.window.height);
     window.setPosition(position.x, position.y);
-      // 기타 설정 적용
+    // 기타 설정 적용
     window.setAlwaysOnTop(appConfig.window.alwaysOnTop);
     window.setResizable(appConfig.window.resizable);
-    
+
     // 작업표시줄 숨김 설정
     if (appConfig.behavior.hideFromTaskbar) {
       window.setSkipTaskbar(true);
     }
-    
+
     // 포커스 관련 설정
     window.setVisibleOnAllWorkspaces(true);
-    
+
     if (appConfig.behavior.startMinimized) {
       window.blur();
     }
-    
+
   } catch (error) {
     console.log('Window positioning failed:', error);
   }
@@ -43,7 +43,7 @@ function setWindowPosition(window: BrowserWindow): void {
 function createWindow(): void {
   // 설정 로드
   appConfig = loadConfig();
-    mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: appConfig.window.width,
     height: appConfig.window.height,
     minWidth: appConfig.window.minWidth,
@@ -104,9 +104,9 @@ function createTray(): void {
   const icon = nativeImage.createFromDataURL(
     'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='
   );
-  
+
   tray = new Tray(icon);
-  
+
   const contextMenu = Menu.buildFromTemplate([
     {
       label: '🎯 Desktop Icons',
@@ -147,7 +147,8 @@ function createTray(): void {
     },
     {
       type: 'separator'
-    },    {
+    },
+    {
       label: '종료',
       type: 'normal',
       click: () => {
@@ -156,10 +157,10 @@ function createTray(): void {
       }
     }
   ]);
-  
+
   tray.setContextMenu(contextMenu);
   tray.setToolTip('Custom Desktop Icons');
-  
+
   // 트레이 아이콘 더블클릭 시 창 보이기/숨기기
   tray.on('double-click', () => {
     if (mainWindow) {
@@ -223,9 +224,9 @@ ipcMain.handle('save-icon-config', async (event, config) => {
     return { success: true };
   } catch (error) {
     console.error('Failed to save icon config:', error);
-    return { 
-      success: false, 
-      error: error instanceof Error ? error.message : 'Unknown error' 
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error'
     };
   }
 });
@@ -234,24 +235,24 @@ ipcMain.handle('launch-app', async (event, appPath: string) => {
   try {
     // 환경 변수 처리
     const expandedPath = appPath.replace(
-      /%([^%]+)%/g, 
+      /%([^%]+)%/g,
       (_match: string, envVar: string) => {
         return process.env[envVar] || '';
       }
     );
-    
+
     exec(`"${expandedPath}"`, (error) => {
       if (error) {
         console.error('Failed to launch app:', error);
       }
     });
-    
+
     return { success: true };
   } catch (error) {
     console.error('Failed to launch app:', error);
-    return { 
-      success: false, 
-      error: error instanceof Error ? error.message : 'Unknown error' 
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error'
     };
   }
 });
@@ -262,9 +263,9 @@ ipcMain.handle('open-url', async (event, url: string) => {
     return { success: true };
   } catch (error) {
     console.error('Failed to open URL:', error);
-    return { 
-      success: false, 
-      error: error instanceof Error ? error.message : 'Unknown error' 
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error'
     };
   }
 });
@@ -273,19 +274,19 @@ ipcMain.handle('open-directory', async (event, dirPath: string) => {
   try {
     // 환경 변수 처리
     const expandedPath = dirPath.replace(
-      /%([^%]+)%/g, 
+      /%([^%]+)%/g,
       (_match: string, envVar: string) => {
         return process.env[envVar] || '';
       }
     );
-    
+
     await shell.openPath(expandedPath);
     return { success: true };
   } catch (error) {
     console.error('Failed to open directory:', error);
-    return { 
-      success: false, 
-      error: error instanceof Error ? error.message : 'Unknown error' 
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error'
     };
   }
 });
@@ -297,9 +298,9 @@ ipcMain.handle('launch-steam-game', async (event, steamId: string) => {
     return { success: true };
   } catch (error) {
     console.error('Failed to launch Steam game:', error);
-    return { 
-      success: false, 
-      error: error instanceof Error ? error.message : 'Unknown error' 
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error'
     };
   }
 });

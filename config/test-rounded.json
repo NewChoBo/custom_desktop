@@ -1,31 +1,31 @@
 {
-  "window": {
-    "width": 400,
-    "height": 600,
-    "position": {
-      "x": "center-bottom",
-      "y": "bottom",
-      "offsetX": 0,
-      "offsetY": -50
+    "window": {
+        "width": 400,
+        "height": 600,
+        "position": {
+            "x": "center-bottom",
+            "y": "bottom",
+            "offsetX": 0,
+            "offsetY": -50
+        },
+        "minWidth": 300,
+        "minHeight": 400,
+        "alwaysOnTop": false,
+        "resizable": true,
+        "movable": true
     },
-    "minWidth": 300,
-    "minHeight": 400,
-    "alwaysOnTop": false,
-    "resizable": true,
-    "movable": true
-  },
-  "ui": {
-    "theme": "dark",
-    "transparency": 0.95,
-    "borderRadius": 20,
-    "showScrollbar": false,
-    "showTitleBar": false,
-    "roundedCorners": true
-  },
-  "behavior": {
-    "hideToTray": true,
-    "startMinimized": false,
-    "autoStart": false,
-    "hideFromTaskbar": true
-  }
+    "ui": {
+        "theme": "dark",
+        "transparency": 0.95,
+        "borderRadius": 20,
+        "showScrollbar": false,
+        "showTitleBar": false,
+        "roundedCorners": true
+    },
+    "behavior": {
+        "hideToTray": true,
+        "startMinimized": false,
+        "autoStart": false,
+        "hideFromTaskbar": true
+    }
 }

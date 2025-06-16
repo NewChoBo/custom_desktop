@@ -1,7 +1,7 @@
-import React, { memo, useMemo, useState, useEffect } from 'react'
-import './App.css'
-import { IconGrid } from './components/IconGrid'
-import { IconData, IconConfig } from './types/IconTypes'
+import React, { memo, useEffect, useMemo, useState } from 'react';
+import './App.css';
+import { IconGrid } from './components/IconGrid';
+import { IconConfig, IconData } from './types/IconTypes';
 
 // 설정 타입 정의
 interface UIConfig {
@@ -27,16 +27,16 @@ const CustomTitleBar = memo(() => {
         <span className="app-name">Desktop Icons</span>
       </div>
       <div className="titlebar-controls" style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}>
-        <button 
-          className="titlebar-button minimize" 
+        <button
+          className="titlebar-button minimize"
           onClick={handleMinimize}
           aria-label="최소화"
           title="최소화"
         >
           −
         </button>
-        <button 
-          className="titlebar-button close" 
+        <button
+          className="titlebar-button close"
           onClick={handleClose}
           aria-label="닫기"
           title="닫기"
@@ -120,7 +120,7 @@ const App: React.FC = () => {
       try {
         setLoading(true);
         setError(null);
-        
+
         // Electron API를 통해 아이콘 설정 로드
         if (window.electronAPI?.loadIconConfig) {
           const config = await window.electronAPI.loadIconConfig();
@@ -147,7 +147,7 @@ const App: React.FC = () => {
 
   const handleIconDoubleClick = async (icon: IconData) => {
     console.log('Icon double-clicked:', icon.title);
-    
+
     if (!window.electronAPI) {
       console.warn('Electron API not available');
       return;
@@ -201,8 +201,8 @@ const App: React.FC = () => {
   } as React.CSSProperties), [uiConfig.borderRadius]);
 
   return (
-    <div 
-      className={`App ${uiConfig.roundedCorners ? 'rounded-corners' : ''}`} 
+    <div
+      className={`App ${uiConfig.roundedCorners ? 'rounded-corners' : ''}`}
       role="main"
       style={appStyle}
     >

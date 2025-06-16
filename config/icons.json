@@ -1,195 +1,195 @@
 {
-  "layout": {
-    "gridRows": 4,
-    "gridCols": 6,
-    "gap": 12,
-    "iconSize": {
-      "width": 64,
-      "height": 64
+    "layout": {
+        "gridRows": 4,
+        "gridCols": 6,
+        "gap": 12,
+        "iconSize": {
+            "width": 64,
+            "height": 64
+        },
+        "autoArrange": false
     },
-    "autoArrange": false
-  },
-  "icons": [
-    {
-      "id": "chrome",
-      "title": "Chrome",
-      "description": "Google Chrome 브라우저",
-      "icon": "🌐",
-      "type": "app",
-      "path": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
-      "gridPosition": {
-        "row": 1,
-        "col": 1
-      },
-      "style": {
-        "backgroundColor": "#4285f4",
-        "textColor": "#ffffff"
-      },
-      "isVisible": true,
-      "order": 1
-    },
-    {
-      "id": "steam",
-      "title": "Steam",
-      "description": "Steam 게임 플랫폼",
-      "icon": "🎮",
-      "type": "app",
-      "path": "C:\\Program Files (x86)\\Steam\\steam.exe",
-      "gridPosition": {
-        "row": 1,
-        "col": 2
-      },
-      "style": {
-        "backgroundColor": "#1b2838",
-        "textColor": "#ffffff"
-      },
-      "isVisible": true,
-      "order": 2
-    },
-    {
-      "id": "vscode",
-      "title": "VS Code",
-      "description": "Visual Studio Code",
-      "icon": "💻",
-      "type": "app",
-      "path": "C:\\Users\\%USERNAME%\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe",
-      "gridPosition": {
-        "row": 1,
-        "col": 3
-      },
-      "style": {
-        "backgroundColor": "#007acc",
-        "textColor": "#ffffff"
-      },
-      "isVisible": true,
-      "order": 3
-    },
-    {
-      "id": "discord",
-      "title": "Discord",
-      "description": "음성 및 텍스트 채팅",
-      "icon": "💬",
-      "type": "app",
-      "path": "C:\\Users\\%USERNAME%\\AppData\\Local\\Discord\\app-1.0.9006\\Discord.exe",
-      "gridPosition": {
-        "row": 1,
-        "col": 4
-      },
-      "style": {
-        "backgroundColor": "#5865f2",
-        "textColor": "#ffffff"
-      },
-      "isVisible": true,
-      "order": 4
-    },
-    {
-      "id": "folder-documents",
-      "title": "문서",
-      "description": "문서 폴더",
-      "icon": "📁",
-      "type": "directory",
-      "path": "C:\\Users\\%USERNAME%\\Documents",
-      "gridPosition": {
-        "row": 2,
-        "col": 1
-      },
-      "style": {
-        "backgroundColor": "#ffa500",
-        "textColor": "#ffffff"
-      },
-      "isVisible": true,
-      "order": 5
-    },
-    {
-      "id": "folder-downloads",
-      "title": "다운로드",
-      "description": "다운로드 폴더",
-      "icon": "📥",
-      "type": "directory",
-      "path": "C:\\Users\\%USERNAME%\\Downloads",
-      "gridPosition": {
-        "row": 2,
-        "col": 2
-      },
-      "style": {
-        "backgroundColor": "#32cd32",
-        "textColor": "#ffffff"
-      },
-      "isVisible": true,
-      "order": 6
-    },
-    {
-      "id": "youtube",
-      "title": "YouTube",
-      "description": "유튜브 웹사이트",
-      "icon": "📺",
-      "type": "url",
-      "url": "https://www.youtube.com",
-      "gridPosition": {
-        "row": 2,
-        "col": 3
-      },
-      "style": {
-        "backgroundColor": "#ff0000",
-        "textColor": "#ffffff"
-      },
-      "isVisible": true,
-      "order": 7
-    },
-    {
-      "id": "github",
-      "title": "GitHub",
-      "description": "깃허브 웹사이트",
-      "icon": "🐱",
-      "type": "url",
-      "url": "https://github.com",
-      "gridPosition": {
-        "row": 2,
-        "col": 4
-      },
-      "style": {
-        "backgroundColor": "#333333",
-        "textColor": "#ffffff"
-      },
-      "isVisible": true,
-      "order": 8
-    },
-    {
-      "id": "big-widget",
-      "title": "대형 위젯",
-      "description": "2x2 크기의 큰 위젯",
-      "icon": "📊",
-      "type": "app",
-      "gridPosition": {
-        "row": 3,
-        "col": 1,
-        "rowSpan": 2,
-        "colSpan": 2
-      },
-      "style": {
-        "backgroundColor": "#9c27b0",
-        "textColor": "#ffffff"
-      },
-      "isVisible": true,
-      "order": 9
-    },
-    {
-      "id": "calculator",
-      "title": "계산기",
-      "description": "Windows 계산기",
-      "icon": "🧮",
-      "type": "app",
-      "path": "calc.exe",
-      "gridPosition": {
-        "row": 3,
-        "col": 3
-      },
-      "style": {
-        "backgroundColor": "#607d8b",
-        "textColor": "#ffffff"
-      },
-      "isVisible": true,
-      "order": 10
-    }
-  ]
+    "icons": [
+        {
+            "id": "chrome",
+            "title": "Chrome",
+            "description": "Google Chrome 브라우저",
+            "icon": "🌐",
+            "type": "app",
+            "path": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+            "gridPosition": {
+                "row": 1,
+                "col": 1
+            },
+            "style": {
+                "backgroundColor": "#4285f4",
+                "textColor": "#ffffff"
+            },
+            "isVisible": true,
+            "order": 1
+        },
+        {
+            "id": "steam",
+            "title": "Steam",
+            "description": "Steam 게임 플랫폼",
+            "icon": "🎮",
+            "type": "app",
+            "path": "C:\\Program Files (x86)\\Steam\\steam.exe",
+            "gridPosition": {
+                "row": 1,
+                "col": 2
+            },
+            "style": {
+                "backgroundColor": "#1b2838",
+                "textColor": "#ffffff"
+            },
+            "isVisible": true,
+            "order": 2
+        },
+        {
+            "id": "vscode",
+            "title": "VS Code",
+            "description": "Visual Studio Code",
+            "icon": "💻",
+            "type": "app",
+            "path": "C:\\Users\\%USERNAME%\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe",
+            "gridPosition": {
+                "row": 1,
+                "col": 3
+            },
+            "style": {
+                "backgroundColor": "#007acc",
+                "textColor": "#ffffff"
+            },
+            "isVisible": true,
+            "order": 3
+        },
+        {
+            "id": "discord",
+            "title": "Discord",
+            "description": "음성 및 텍스트 채팅",
+            "icon": "💬",
+            "type": "app",
+            "path": "C:\\Users\\%USERNAME%\\AppData\\Local\\Discord\\app-1.0.9006\\Discord.exe",
+            "gridPosition": {
+                "row": 1,
+                "col": 4
+            },
+            "style": {
+                "backgroundColor": "#5865f2",
+                "textColor": "#ffffff"
+            },
+            "isVisible": true,
+            "order": 4
+        },
+        {
+            "id": "folder-documents",
+            "title": "문서",
+            "description": "문서 폴더",
+            "icon": "📁",
+            "type": "directory",
+            "path": "C:\\Users\\%USERNAME%\\Documents",
+            "gridPosition": {
+                "row": 2,
+                "col": 1
+            },
+            "style": {
+                "backgroundColor": "#ffa500",
+                "textColor": "#ffffff"
+            },
+            "isVisible": true,
+            "order": 5
+        },
+        {
+            "id": "folder-downloads",
+            "title": "다운로드",
+            "description": "다운로드 폴더",
+            "icon": "📥",
+            "type": "directory",
+            "path": "C:\\Users\\%USERNAME%\\Downloads",
+            "gridPosition": {
+                "row": 2,
+                "col": 2
+            },
+            "style": {
+                "backgroundColor": "#32cd32",
+                "textColor": "#ffffff"
+            },
+            "isVisible": true,
+            "order": 6
+        },
+        {
+            "id": "youtube",
+            "title": "YouTube",
+            "description": "유튜브 웹사이트",
+            "icon": "📺",
+            "type": "url",
+            "url": "https://www.youtube.com",
+            "gridPosition": {
+                "row": 2,
+                "col": 3
+            },
+            "style": {
+                "backgroundColor": "#ff0000",
+                "textColor": "#ffffff"
+            },
+            "isVisible": true,
+            "order": 7
+        },
+        {
+            "id": "github",
+            "title": "GitHub",
+            "description": "깃허브 웹사이트",
+            "icon": "🐱",
+            "type": "url",
+            "url": "https://github.com",
+            "gridPosition": {
+                "row": 2,
+                "col": 4
+            },
+            "style": {
+                "backgroundColor": "#333333",
+                "textColor": "#ffffff"
+            },
+            "isVisible": true,
+            "order": 8
+        },
+        {
+            "id": "big-widget",
+            "title": "대형 위젯",
+            "description": "2x2 크기의 큰 위젯",
+            "icon": "📊",
+            "type": "app",
+            "gridPosition": {
+                "row": 3,
+                "col": 1,
+                "rowSpan": 2,
+                "colSpan": 2
+            },
+            "style": {
+                "backgroundColor": "#9c27b0",
+                "textColor": "#ffffff"
+            },
+            "isVisible": true,
+            "order": 9
+        },
+        {
+            "id": "calculator",
+            "title": "계산기",
+            "description": "Windows 계산기",
+            "icon": "🧮",
+            "type": "app",
+            "path": "calc.exe",
+            "gridPosition": {
+                "row": 3,
+                "col": 3
+            },
+            "style": {
+                "backgroundColor": "#607d8b",
+                "textColor": "#ffffff"
+            },
+            "isVisible": true,
+            "order": 10
+        }
+    ]
 }
