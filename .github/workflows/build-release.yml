@@ -79,6 +79,7 @@ jobs:
         run: |
           gh release delete "${{ steps.version.outputs.version }}" --yes || echo "No existing release"
           git push origin --delete "refs/tags/${{ steps.version.outputs.version }}" || echo "No existing tag"
+          sleep 5  # 삭제 후 5초 대기 (Race condition 방지)
 
       - name: Create Git tag (for workflow_dispatch)
         if: github.event_name == 'workflow_dispatch'
