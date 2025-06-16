@@ -3,6 +3,17 @@
 ## Project Context
 This is a **Custom Desktop Icons** application built with Electron, React, and TypeScript. The main purpose is desktop icon management with Steam integration.
 
+## Code Formatting Rules - CRITICAL
+**ALWAYS follow Prettier formatting standards:**
+- Use single quotes for strings
+- Semicolons are required
+- 2 spaces for indentation (NO TABS)
+- 80 character line limit
+- Trailing commas in ES5 compatible contexts
+- Proper spacing around operators and keywords
+- Consistent bracket placement
+- Line breaks between logical code blocks
+
 ## Tech Stack
 - **Frontend**: React 19 + TypeScript 5.8
 - **Desktop**: Electron 36
@@ -197,15 +208,24 @@ const result = await window.electronAPI.invoke('channel-name', data)
    - Use single quotes for strings
    - Include semicolons
    - Respect 80 character line limit
+   - **NEVER break Prettier formatting rules**
 
 9. **Code Structure**:
    - Group related code with blank lines
    - Organize imports properly
    - Use consistent naming conventions
    - Add proper TypeScript types
+   - Follow Prettier configuration exactly
 
 10. **Quality Checks**:
     - Ensure code is properly formatted before suggesting
     - Check for consistent indentation
     - Verify proper spacing around operators
     - Maintain alignment in object literals and arrays
+    - Run Prettier formatting mentally before output
+
+## Code Generation Rules
+- **NEVER generate code that violates Prettier rules**
+- **ALWAYS use proper TypeScript types**
+- **ALWAYS follow the established project patterns**
+- **ALWAYS maintain consistent formatting**
