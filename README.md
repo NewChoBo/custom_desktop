@@ -86,3 +86,41 @@ This is a personal project, but suggestions and feedback are welcome!
 ## 📄 License
 
 Private project - All rights reserved.
+
+## 🤖 AI Development with GitHub Copilot
+
+This project is optimized for GitHub Copilot development. Here are some tips:
+
+### 🎯 Copilot Context
+- **Project Type**: Electron + React + TypeScript desktop application
+- **Main Purpose**: Desktop icon management with Steam integration
+- **Key Technologies**: Electron 36, React 19, TypeScript 5.8, Vite 6
+
+### 💡 Copilot Usage Tips
+1. **File Context**: Keep relevant imports and type definitions visible
+2. **Comments**: Use descriptive comments to guide Copilot suggestions
+3. **Naming**: Use clear, descriptive variable and function names
+4. **Patterns**: Follow established patterns in the codebase
+
+### 🔧 Copilot Chat Commands
+```
+# In VS Code, use Ctrl+Shift+I to open Copilot Chat and try:
+/explain - Explain selected code
+/fix - Fix bugs in selected code
+/tests - Generate unit tests
+/doc - Generate documentation
+```
+
+### 📁 Key Directories for Copilot Context
+
+- `src/` - React frontend components
+- `electron/` - Electron main and preload scripts
+- `.vscode/` - VS Code workspace configuration
+
+## 🤝 Contributing
+
+This is a personal project, but suggestions and feedback are welcome!
+
+## 📄 License
+
+Private project - All rights reserved.
