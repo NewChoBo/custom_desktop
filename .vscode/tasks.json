@@ -1,0 +1,59 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Dev Server",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"dev"
+			],
+			"group": "build",
+			"isBackground": true,
+			"problemMatcher": [
+				"$tsc"
+			]
+		},
+		{
+			"label": "Build",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"build"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": [
+				"$tsc"
+			]
+		},
+		{
+			"label": "Electron Dev",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"electron"
+			],
+			"group": "build",
+			"dependsOn": "Dev Server",
+			"problemMatcher": []
+		},
+		{
+			"label": "Electron Build",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"electron:build"
+			],
+			"group": "build",
+			"dependsOn": "Build",
+			"problemMatcher": []
+		}
+	]
+}
