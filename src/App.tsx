@@ -1,22 +1,22 @@
-import React, { memo, useMemo } from 'react'
+import React, { memo, useMemo, useState, useEffect } from 'react'
 import './App.css'
+import { IconGrid } from './components/IconGrid'
+import { IconData, IconConfig } from './types/IconTypes'
 
-// 프로젝트 정보 타입 정의
-interface ProjectInfo {
-  id: string
-  label: string
-  completed: boolean
+// 설정 타입 정의
+interface UIConfig {
+  showTitleBar: boolean;
+  borderRadius: number;
+  roundedCorners: boolean;
 }
 
 // 커스텀 타이틀바 컴포넌트
 const CustomTitleBar = memo(() => {
   const handleClose = () => {
-    // 일단 브라우저의 기본 닫기 동작 사용
     window.close();
   };
 
   const handleMinimize = () => {
-    // 최소화는 일단 숨기기로 대체
     console.log('Minimize clicked');
   };
 
@@ -50,70 +50,188 @@ const CustomTitleBar = memo(() => {
 
 CustomTitleBar.displayName = 'CustomTitleBar';
 
-// 프로젝트 정보 컴포넌트
-const ProjectInfoItem = memo(({ label, completed }: { label: string; completed: boolean }) => (
-  <li className="project-info-item" aria-label={`${label} ${completed ? '완료됨' : '진행중'}`}>
-    <span className="status-icon" role="img" aria-label={completed ? '완료' : '진행중'}>
-      {completed ? '✅' : '🔄'}
-    </span>
-    {label}
-  </li>
-))
-
-ProjectInfoItem.displayName = 'ProjectInfoItem'
-
-// 상태 표시 컴포넌트
-const StatusBadge = memo(({ status }: { status: string }) => (
-  <p className="status" role="status" aria-live="polite">
-    상태: <span className="success">{status}</span>
-  </p>
-))
-
-StatusBadge.displayName = 'StatusBadge'
-
 // 메인 앱 컴포넌트
 const App: React.FC = () => {
-  // 프로젝트 정보 데이터 - useMemo로 최적화
-  const projectInfos = useMemo((): ProjectInfo[] => [
-    { id: 'react-ts', label: 'React + TypeScript', completed: true },
-    { id: 'electron', label: 'Electron', completed: true },
-    { id: 'vite', label: 'Vite', completed: true },
-    { id: 'cross-platform', label: '크로스 플랫폼 지원', completed: true }
-  ], [])
-  // 앱 상태 - 향후 동적으로 변경 가능
-  const appStatus = useMemo(() => '정상 동작', []);
+  // 설정 상태 (실제로는 Electron에서 가져와야 하지만 임시로 기본값 사용)
+  const [uiConfig] = useState<UIConfig>({
+    showTitleBar: false, // 기본값: 타이틀바 숨김
+    borderRadius: 12,
+    roundedCorners: true,
+  });  // 아이콘 설정 로드
+  const [iconConfig, setIconConfig] = useState<IconConfig | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // 기본 아이콘 설정 (폴백용)
+  const defaultIconConfig: IconConfig = useMemo(() => ({
+    layout: {
+      gridRows: 4,
+      gridCols: 6,
+      gap: 12,
+      iconSize: {
+        width: 64,
+        height: 64
+      },
+      autoArrange: false
+    },
+    icons: [
+      {
+        id: 'chrome',
+        title: 'Chrome',
+        description: 'Google Chrome 브라우저',
+        icon: '🌐',
+        type: 'app',
+        path: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+        gridPosition: { row: 1, col: 1 },
+        style: { backgroundColor: '#4285f4', textColor: '#ffffff' },
+        isVisible: true,
+        order: 1
+      },
+      {
+        id: 'steam',
+        title: 'Steam',
+        description: 'Steam 게임 플랫폼',
+        icon: '🎮',
+        type: 'app',
+        path: 'C:\\Program Files (x86)\\Steam\\steam.exe',
+        gridPosition: { row: 1, col: 2 },
+        style: { backgroundColor: '#1b2838', textColor: '#ffffff' },
+        isVisible: true,
+        order: 2
+      },
+      {
+        id: 'github',
+        title: 'GitHub',
+        description: '코드 저장소',
+        icon: '🐙',
+        type: 'url',
+        url: 'https://github.com',
+        gridPosition: { row: 1, col: 3 },
+        style: { backgroundColor: '#24292f', textColor: '#ffffff' },
+        isVisible: true,
+        order: 3
+      }
+    ]
+  }), []);
+
+  // 아이콘 설정 로드
+  useEffect(() => {
+    const loadIconConfig = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        // Electron API를 통해 아이콘 설정 로드
+        if (window.electronAPI?.loadIconConfig) {
+          const config = await window.electronAPI.loadIconConfig();
+          setIconConfig(config);
+        } else {
+          // 개발 환경에서는 기본 설정 사용
+          setIconConfig(defaultIconConfig);
+        }
+      } catch (err) {
+        console.error('Failed to load icon config:', err);
+        setError('아이콘 설정을 로드하는데 실패했습니다.');
+        setIconConfig(defaultIconConfig); // 기본 설정으로 폴백
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadIconConfig();
+  }, [defaultIconConfig]);
+
+  const handleIconClick = (icon: IconData) => {
+    console.log('Icon clicked:', icon.title);
+  };
+
+  const handleIconDoubleClick = async (icon: IconData) => {
+    console.log('Icon double-clicked:', icon.title);
+    
+    if (!window.electronAPI) {
+      console.warn('Electron API not available');
+      return;
+    }
+
+    try {
+      switch (icon.type) {
+        case 'app':
+          if (icon.path) {
+            const result = await window.electronAPI.launchApp(icon.path);
+            if (!result.success) {
+              console.error('Failed to launch app:', result.error);
+            }
+          }
+          break;
+        case 'directory':
+          if (icon.path) {
+            const result = await window.electronAPI.openDirectory(icon.path);
+            if (!result.success) {
+              console.error('Failed to open directory:', result.error);
+            }
+          }
+          break;
+        case 'url':
+          if (icon.url) {
+            const result = await window.electronAPI.openUrl(icon.url);
+            if (!result.success) {
+              console.error('Failed to open URL:', result.error);
+            }
+          }
+          break;
+        case 'steam-game':
+          if (icon.steamId) {
+            const result = await window.electronAPI.launchSteamGame(icon.steamId);
+            if (!result.success) {
+              console.error('Failed to launch Steam game:', result.error);
+            }
+          }
+          break;
+        default:
+          console.log('Unknown icon type:', icon.type);
+      }
+    } catch (error) {
+      console.error('Failed to execute icon action:', error);
+    }
+  };
+
+  // CSS 변수 설정
+  const appStyle = useMemo(() => ({
+    '--border-radius': `${uiConfig.borderRadius}px`,
+  } as React.CSSProperties), [uiConfig.borderRadius]);
 
   return (
-    <div className="App" role="main">
-      <CustomTitleBar />
-      <div className="app-content">
-        <header className="App-header">
-          <h1 className="app-title">
-            <span role="img" aria-label="타겟">🎯</span>
-            Custom Desktop Icons
-          </h1>
-          
-          <p className="welcome-message">
-            Hello World! 앱이 정상적으로 실행되었습니다.
-          </p>
-          
-          <section className="info-box" aria-labelledby="project-info-title">
-            <h2 id="project-info-title" className="info-title">
-              프로젝트 정보
-            </h2>
-            <ul className="project-info-list" role="list">
-              {projectInfos.map((info) => (
-                <ProjectInfoItem 
-                  key={info.id}
-                  label={info.label}
-                  completed={info.completed}
-                />
-              ))}
-            </ul>
-          </section>
-          
-          <StatusBadge status={appStatus} />
-        </header>
+    <div 
+      className={`App ${uiConfig.roundedCorners ? 'rounded-corners' : ''}`} 
+      role="main"
+      style={appStyle}
+    >
+      {uiConfig.showTitleBar && <CustomTitleBar />}      <div className="app-content">
+        {loading ? (
+          <div className="loading">
+            <div className="loading-spinner">⏳</div>
+            <p>아이콘 로딩 중...</p>
+          </div>
+        ) : error ? (
+          <div className="error">
+            <div className="error-icon">⚠️</div>
+            <p>{error}</p>
+            <button onClick={() => window.location.reload()} className="retry-button">
+              다시 시도
+            </button>
+          </div>
+        ) : iconConfig ? (
+          <IconGrid
+            config={iconConfig}
+            onIconClick={handleIconClick}
+            onIconDoubleClick={handleIconDoubleClick}
+          />
+        ) : (
+          <div className="no-icons">
+            <div className="no-icons-icon">📂</div>
+            <p>아이콘이 없습니다.</p>
+          </div>
+        )}
       </div>
     </div>
   )
