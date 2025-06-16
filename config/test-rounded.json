@@ -13,10 +13,11 @@
     "alwaysOnTop": false,
     "resizable": true,
     "movable": true
-  },  "ui": {
+  },
+  "ui": {
     "theme": "dark",
     "transparency": 0.95,
-    "borderRadius": 12,
+    "borderRadius": 20,
     "showScrollbar": false,
     "showTitleBar": false,
     "roundedCorners": true

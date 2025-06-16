@@ -115,12 +115,14 @@
     "theme": "dark",
     "transparency": 0.9,
     "borderRadius": 16,
-    "showScrollbar": false
+    "showScrollbar": false,
+    "showTitleBar": false,
+    "roundedCorners": true
   }
 }
 ```
 
-### 불투명 라이트 테마
+### 타이틀바 표시된 라이트 테마
 
 ```json
 {
@@ -128,21 +130,24 @@
     "theme": "light",
     "transparency": 1.0,
     "borderRadius": 8,
-    "showScrollbar": true
+    "showScrollbar": true,
+    "showTitleBar": true,
+    "roundedCorners": false
   }
 }
 ```
 
 ## 동작 설정 예시
 
-### 트레이로 숨김
+### 트레이로 숨김 + 작업표시줄 숨김
 
 ```json
 {
   "behavior": {
     "hideToTray": true,
     "startMinimized": false,
-    "autoStart": true
+    "autoStart": true,
+    "hideFromTaskbar": true
   }
 }
 ```
@@ -154,7 +159,8 @@
   "behavior": {
     "hideToTray": false,
     "startMinimized": false,
-    "autoStart": false
+    "autoStart": false,
+    "hideFromTaskbar": false
   }
 }
 ```
