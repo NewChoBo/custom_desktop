@@ -23,12 +23,15 @@ export interface UIConfig {
   transparency: number;
   borderRadius: number;
   showScrollbar: boolean;
+  showTitleBar: boolean;
+  roundedCorners: boolean;
 }
 
 export interface BehaviorConfig {
   hideToTray: boolean;
   startMinimized: boolean;
   autoStart: boolean;
+  hideFromTaskbar: boolean;
 }
 
 export interface AppConfig {
@@ -52,17 +55,19 @@ const defaultConfig: AppConfig = {
     alwaysOnTop: false,
     resizable: true,
     movable: true,
-  },
-  ui: {
+  },  ui: {
     theme: 'dark',
     transparency: 0.95,
     borderRadius: 12,
     showScrollbar: false,
+    showTitleBar: false,
+    roundedCorners: true,
   },
   behavior: {
     hideToTray: true,
     startMinimized: false,
     autoStart: false,
+    hideFromTaskbar: true,
   },
 };
 
