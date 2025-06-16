@@ -229,3 +229,25 @@ const result = await window.electronAPI.invoke('channel-name', data)
 - **ALWAYS use proper TypeScript types**
 - **ALWAYS follow the established project patterns**
 - **ALWAYS maintain consistent formatting**
+
+## Commit Message Format
+Follow **Conventional Commits** specification:
+
+```text
+<type>(<scope>): <description>
+
+[optional body]
+[optional footer(s)]
+```
+
+### Types
+- **feat(scope)**: New feature
+- **fix(scope)**: Bug fix
+- **docs**: Documentation changes
+- **chore**: Build process, tool changes
+- **refactor**: Code refactoring (no functionality change)
+- **test**: Adding/modifying tests
+- **hotfix**: Critical bug fix
+
+### Common Scopes
+- `ui`, `config`, `main`, `tray`, `build`, `docs`, `test`, `deps`

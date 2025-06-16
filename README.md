@@ -79,30 +79,25 @@ custom_desktop/
 - [ ] Cross-platform packaging
 - [ ] Auto-updater integration
 
-## 🤝 Contributing
-
-This is a personal project, but suggestions and feedback are welcome!
-
-## 📄 License
-
-Private project - All rights reserved.
-
-## 🤖 AI Development with GitHub Copilot
+## AI Development with GitHub Copilot
 
 This project is optimized for GitHub Copilot development. Here are some tips:
 
 ### 🎯 Copilot Context
+
 - **Project Type**: Electron + React + TypeScript desktop application
 - **Main Purpose**: Desktop icon management with Steam integration
 - **Key Technologies**: Electron 36, React 19, TypeScript 5.8, Vite 6
 
 ### 💡 Copilot Usage Tips
+
 1. **File Context**: Keep relevant imports and type definitions visible
 2. **Comments**: Use descriptive comments to guide Copilot suggestions
 3. **Naming**: Use clear, descriptive variable and function names
 4. **Patterns**: Follow established patterns in the codebase
 
 ### 🔧 Copilot Chat Commands
+
 ```
 # In VS Code, use Ctrl+Shift+I to open Copilot Chat and try:
 /explain - Explain selected code
@@ -116,6 +111,43 @@ This project is optimized for GitHub Copilot development. Here are some tips:
 - `src/` - React frontend components
 - `electron/` - Electron main and preload scripts
 - `.vscode/` - VS Code workspace configuration
+
+## 📝 Commit Message Format
+
+This project follows **Conventional Commits** specification:
+
+```
+<type>(<scope>): <description>
+
+[optional body]
+[optional footer(s)]
+```
+
+### Commit Types
+
+- **feat(scope)**: New feature
+- **fix(scope)**: Bug fix
+- **docs**: Documentation changes
+- **chore**: Build process, tool changes
+- **refactor**: Code refactoring (no functionality change)
+- **test**: Adding/modifying tests
+- **hotfix**: Critical bug fix
+
+### Examples
+
+```bash
+feat(config): add flexible window positioning system
+fix(ui): resolve scrollbar visibility issues
+docs(readme): update configuration examples
+chore(deps): update electron to v36
+refactor(main): simplify window creation logic
+test(config): add unit tests for config loader
+hotfix(tray): fix tray icon display issue
+```
+
+### Common Scopes
+
+- `ui`, `config`, `main`, `tray`, `build`, `docs`, `test`, `deps`
 
 ## 🤝 Contributing
 
