@@ -6,13 +6,21 @@ on:
       - 'v*'
   workflow_dispatch:
     inputs:
-      version:
-        description: 'Release version (e.g., v1.0.0)'
+      release_type:
+        description: 'Release type'
         required: true
+        default: 'auto'
+        type: choice
+        options:
+          - 'auto'
+          - 'manual'
+      version:
+        description: 'Manual release version (e.g., v1.0.0) - only for manual type'
+        required: false
         default: 'v1.0.0'
 
 permissions:
-  contents: write    # 릴리즈 생성·자산 업로드에 필요
+  contents: write
   actions: read
   security-events: write
 
@@ -26,7 +34,7 @@ jobs:
       - name: Checkout code (with all tags & history)
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0    # 모든 커밋 + 태그 가져오기 :contentReference[oaicite:0]{index=0}
+          fetch-depth: 0
           fetch-tags: true
 
       - name: Setup Node.js
@@ -64,41 +72,88 @@ jobs:
         with:
           path: ./artifacts
 
-      - name: Determine version
+      - name: Create dynamic tag name
         id: version
         run: |
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+            if [[ "${{ github.event.inputs.release_type }}" == "manual" ]]; then
+              # Manual release with specific version
+              echo "tag_name=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+              echo "release_name=Custom Desktop Icons ${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+              echo "is_manual=true" >> $GITHUB_OUTPUT
+            else
+              # Auto release with dynamic tag
+              TAG_NAME="build-$(date +'%Y%m%d-%H%M%S')-$(git rev-parse --short HEAD)"
+              echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
+              echo "release_name=Custom Desktop Icons Auto Build $TAG_NAME" >> $GITHUB_OUTPUT
+              echo "is_manual=false" >> $GITHUB_OUTPUT
+            fi
           else
-            echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+            # Tag push - use the pushed tag
+            echo "tag_name=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+            echo "release_name=Custom Desktop Icons ${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+            echo "is_manual=true" >> $GITHUB_OUTPUT
           fi
 
-      - name: Delete existing release & tag (if any)
+      - name: Delete existing release & tag (only for manual releases)
+        if: steps.version.outputs.is_manual == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release delete "${{ steps.version.outputs.version }}" --yes || echo "No existing release"
-          git push origin --delete "refs/tags/${{ steps.version.outputs.version }}" || echo "No existing tag"
-          sleep 5  # 삭제 후 5초 대기 (Race condition 방지)
+          gh release delete "${{ steps.version.outputs.tag_name }}" --yes || echo "No existing release"
+          git push origin --delete "refs/tags/${{ steps.version.outputs.tag_name }}" || echo "No existing tag"
+          sleep 3
 
-      - name: Create Git tag (for workflow_dispatch)
-        if: github.event_name == 'workflow_dispatch'
+      - name: Create Git tag
         run: |
-          git tag "${{ steps.version.outputs.version }}"
-          git push origin "${{ steps.version.outputs.version }}"
+          git tag "${{ steps.version.outputs.tag_name }}"
+          git push origin "${{ steps.version.outputs.tag_name }}"
 
       - name: Create GitHub Release and upload assets
-        uses: softprops/action-gh-release@v2   # v2로 업그레이드 :contentReference[oaicite:1]{index=1}
+        uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ steps.version.outputs.version }}
-          name: Custom Desktop Icons ${{ steps.version.outputs.version }}
+          tag_name: ${{ steps.version.outputs.tag_name }}
+          name: ${{ steps.version.outputs.release_name }}
           body: |
-            ## 🎯 Custom Desktop Icons ${{ steps.version.outputs.version }}
-            ...
+            ## 🎯 ${{ steps.version.outputs.release_name }}
+            
+            ### 📥 Downloads
+            Choose the appropriate file for your operating system:
+            
+            - **Windows**: `Custom Desktop Icons.exe` (from windows-latest-build.zip)
+            - **macOS**: `Custom Desktop Icons.app` (from macos-latest-build.zip)  
+            - **Linux**: Executable file (from ubuntu-latest-build.zip)
+            
+            ### ✨ Key Features
+            - 🎮 Steam integration for gaming shortcuts
+            - 🖥️ System tray integration with settings GUI
+            - 📐 Flexible window positioning (percentage-based sizing)
+            - 🖼️ Multi-monitor support
+            - 🎯 Widget-style "stayBehind" desktop mode
+            - 🎨 Modern glassmorphic UI design
+            
+            ### 🚀 Quick Start
+            1. Download and extract the appropriate file for your OS
+            2. Run the executable
+            3. Right-click the system tray icon for settings
+            4. Customize window position, size, and behavior
+            
+            ### 💡 Usage Tips
+            - Access all settings via system tray (primary method)
+            - Use "stayBehind" mode for true desktop widget experience
+            - Supports percentage-based window sizing (e.g., "80%" width)
+            - Multi-monitor: Create windows on different displays
+            
+            ---
+            *Built with Electron + React + TypeScript*
+            
+            **Build Info:**
+            - Commit: ${{ github.sha }}
+            - Build Time: ${{ github.run_id }}
+            - Workflow: ${{ github.workflow }}
           draft: false
-          prerelease: false
+          prerelease: ${{ steps.version.outputs.is_manual == 'false' }}
           files: |
             artifacts/**/*
-
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
