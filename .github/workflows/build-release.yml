@@ -64,6 +64,16 @@ jobs:
         with:
           path: ./artifacts
 
+      - name: Compress artifacts into OS-specific zips
+        run: |
+          cd artifacts
+          for dir in *; do
+            if [ -d "$dir" ]; then
+              zip -rq "${dir}.zip" "$dir"
+            fi
+          done
+          cd ..
+
       - name: Determine version
         id: version
         run: |
