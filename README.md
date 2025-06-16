@@ -49,6 +49,85 @@ npm run build:electron
 npm run build
 ```
 
+## 🖥️ Multi-Monitor Support
+
+This app supports multiple monitors and flexible window sizing:
+
+### 📐 Percentage-Based Window Sizing
+
+You can set window dimensions as percentages of the screen size:
+
+```json
+{
+  "window": {
+    "width": "80%",    // 80% of monitor width
+    "height": "70%",   // 70% of monitor height
+    "position": {
+      "x": "center",
+      "y": "center"
+    }
+  }
+}
+```
+
+### 🖼️ Multi-Monitor Features
+
+#### Create Windows on Different Monitors
+
+```javascript
+// Get available displays
+const displays = await window.electronAPI.getDisplays();
+
+// Create window on specific monitor
+await window.electronAPI.createWindow(1); // Monitor 2
+await window.electronAPI.createWindow(2); // Monitor 3
+```
+
+#### Multiple Windows on Same Monitor
+
+You can create multiple windows on the same monitor by calling `createWindow()` multiple times with the same display index.
+
+#### Example Configurations
+
+**Monitor 1 (80% width):**
+
+```json
+{
+  "window": {
+    "width": "80%",
+    "height": "90%",
+    "position": { "x": "left", "y": "center" }
+  }
+}
+```
+
+**Monitor 2 (Fixed size):**
+
+```json
+{
+  "window": {
+    "width": 400,
+    "height": 600,
+    "position": { "x": "right", "y": "bottom" }
+  }
+}
+```
+
+### 🔧 Available APIs
+
+- `getDisplays()` - Get list of all monitors
+- `createWindow(displayIndex)` - Create window on specific monitor
+- `closeAllWindows()` - Close all secondary windows
+
+### 📱 Position Options
+
+- `"center"` - Center of screen
+- `"left"` - Left side
+- `"right"` - Right side
+- `"top"` - Top of screen
+- `"bottom"` - Bottom of screen
+- `100` - Exact pixel position
+
 ## 📁 Project Structure
 
 ```

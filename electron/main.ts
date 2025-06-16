@@ -12,15 +12,14 @@ let appConfig: AppConfig;
 const isDev = process.env.NODE_ENV === 'development';
 
 // 설정 기반으로 창을 배치하는 함수
-function setWindowPosition(window: BrowserWindow): void {
+function setWindowPosition(window: BrowserWindow, displayIndex: number = 0): void {
   try {
-    // 설정에서 위치 계산
-    const position = calculateWindowPosition(appConfig.window);
+    // 설정에서 위치 및 크기 계산
+    const { x, y, width, height } = calculateWindowPosition(appConfig.window, displayIndex);
 
-    window.setSize(appConfig.window.width, appConfig.window.height);
-    window.setPosition(position.x, position.y);
-    // 기타 설정 적용
-    window.setAlwaysOnTop(appConfig.window.alwaysOnTop);
+    window.setSize(width, height);
+    window.setPosition(x, y);    // 기타 설정 적용
+    window.setAlwaysOnTop(appConfig.window.windowLevel === 'alwaysOnTop');
     window.setResizable(appConfig.window.resizable);
 
     // 작업표시줄 숨김 설정
@@ -40,19 +39,40 @@ function setWindowPosition(window: BrowserWindow): void {
   }
 }
 
-function createWindow(): void {
-  // 설정 로드
-  appConfig = loadConfig();
-  mainWindow = new BrowserWindow({
-    width: appConfig.window.width,
-    height: appConfig.window.height,
+// 여러 창을 생성하는 함수
+function createMultipleWindows(displayIndexes: number[] = [0]): BrowserWindow[] {
+  const windows: BrowserWindow[] = [];
+
+  displayIndexes.forEach((displayIndex, index) => {
+    const window = createWindow(displayIndex, index === 0); // 첫 번째 창만 메인 창으로 설정
+    if (window) {
+      windows.push(window);
+    }
+  });
+
+  return windows;
+}
+
+function createWindow(displayIndex: number = 0, isMain: boolean = true): BrowserWindow | null {
+  // 설정 로드 (메인 창일 때만)
+  if (isMain) {
+    appConfig = loadConfig();
+  }
+
+  // 창 크기 및 위치 계산
+  const { x, y, width, height } = calculateWindowPosition(appConfig.window, displayIndex);
+  const window = new BrowserWindow({
+    width,
+    height,
+    x,
+    y,
     minWidth: appConfig.window.minWidth,
     minHeight: appConfig.window.minHeight,
     show: false,
     // 가벼운 위젯 UI 설정
     frame: false, // 타이틀바 완전 제거
     transparent: !appConfig.ui.roundedCorners, // 둥근 모서리일 때는 투명도 비활성화
-    alwaysOnTop: appConfig.window.alwaysOnTop,
+    alwaysOnTop: appConfig.window.windowLevel === 'alwaysOnTop',
     skipTaskbar: false,
     resizable: appConfig.window.resizable,
     movable: appConfig.window.movable,
@@ -60,42 +80,90 @@ function createWindow(): void {
     maximizable: false, // 최대화 버튼 제거
     closable: true,
     focusable: true,
+    fullscreenable: appConfig.window.fullscreenable || false,
+    // 창 레벨 설정 (다른 창에 덮이지 않도록)
+    ...(appConfig.window.level && { type: appConfig.window.level }),
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
       preload: path.join(__dirname, 'preload.js'),
       webSecurity: !isDev
-    },    // Windows에서 추가 설정
+    },
+    // Windows에서 추가 설정
     ...(process.platform === 'win32' && {
       autoHideMenuBar: true,
-      type: 'normal',
+      type: appConfig.window.level || 'normal',
       roundedCorners: appConfig.ui.roundedCorners // Windows 11에서 네이티브 둥근 모서리
     })
   });
 
   // Load the app
   if (isDev) {
-    mainWindow.loadURL('http://localhost:5173');
-    mainWindow.webContents.openDevTools();
+    window.loadURL('http://localhost:5173');
+    window.webContents.openDevTools();
   } else {
-    mainWindow.loadFile(path.join(__dirname, '../dist/index.html'));
-  }  // Show window when ready
-  mainWindow.once('ready-to-show', () => {
-    mainWindow?.show();    // 바탕화면 위젯으로 설정
-    if (mainWindow) {
-      setWindowPosition(mainWindow);
+    window.loadFile(path.join(__dirname, '../dist/index.html'));
+  }
+  // Show window when ready
+  window.once('ready-to-show', () => {
+    window.show();
+
+    // 작업표시줄 숨김 설정 적용
+    if (appConfig.behavior.hideFromTaskbar) {
+      window.setSkipTaskbar(true);
     }
-  });  // Handle window close - 트레이로 숨기기
-  mainWindow.on('close', (event) => {
-    if (!isQuitting) {
-      event.preventDefault();
-      mainWindow?.hide();
+
+    // 모든 워크스페이스에서 보이기 설정
+    if (appConfig.window.visibleOnAllWorkspaces) {
+      window.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
+    }    // 창 레벨 설정 적용
+    try {
+      switch (appConfig.window.windowLevel) {
+        case 'alwaysOnTop':
+          window.setAlwaysOnTop(true);
+          if (appConfig.window.level === 'floating') {
+            window.setAlwaysOnTop(true, 'floating');
+          } else if (appConfig.window.level === 'status') {
+            window.setAlwaysOnTop(true, 'status');
+          }
+          break;
+        case 'stayBehind':
+          window.setAlwaysOnTop(false);
+          // 창을 뒤로 보내기
+          if (process.platform === 'win32') {
+            window.blur();
+          }
+          break;
+        case 'default':
+        default:
+          window.setAlwaysOnTop(false);
+          break;
+      }
+    } catch (error) {
+      console.log('Failed to set window level:', error);
     }
   });
 
-  mainWindow.on('closed', () => {
-    mainWindow = null;
+  // Handle window close - 메인 창은 트레이로 숨기기, 서브 창은 닫기
+  window.on('close', (event) => {
+    if (isMain && !isQuitting) {
+      event.preventDefault();
+      window.hide();
+    }
   });
+
+  window.on('closed', () => {
+    if (isMain) {
+      mainWindow = null;
+    }
+  });
+
+  // 메인 창 설정
+  if (isMain) {
+    mainWindow = window;
+  }
+
+  return window;
 }
 
 // 시스템 트레이 생성 함수
@@ -137,12 +205,11 @@ function createTray(): void {
     },
     {
       type: 'separator'
-    },
-    {
+    },    {
       label: '설정',
       type: 'normal',
       click: () => {
-        console.log('설정 열기');
+        createSettingsWindow();
       }
     },
     {
@@ -196,6 +263,54 @@ app.on('before-quit', () => {
 });
 
 // IPC 핸들러들
+// 모니터 정보 조회
+ipcMain.handle('get-displays', async () => {
+  try {
+    const { screen } = require('electron');
+    const displays = screen.getAllDisplays();
+    return displays.map((display: any, index: number) => ({
+      id: display.id,
+      index,
+      bounds: display.bounds,
+      workArea: display.workArea,
+      size: display.size,
+      workAreaSize: display.workAreaSize,
+      scaleFactor: display.scaleFactor,
+      label: `Monitor ${index + 1}`,
+      primary: display.id === screen.getPrimaryDisplay().id
+    }));
+  } catch (error) {
+    console.error('Failed to get displays:', error);
+    return [];
+  }
+});
+
+// 새 창 생성 (특정 모니터에)
+ipcMain.handle('create-window', async (event, displayIndex: number = 0) => {
+  try {
+    const window = createWindow(displayIndex, false);
+    return { success: true, windowId: window?.id };
+  } catch (error) {
+    console.error('Failed to create window:', error);
+    return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+  }
+});
+
+// 모든 창 닫기
+ipcMain.handle('close-all-windows', async () => {
+  try {
+    BrowserWindow.getAllWindows().forEach(window => {
+      if (window !== mainWindow) {
+        window.close();
+      }
+    });
+    return { success: true };
+  } catch (error) {
+    console.error('Failed to close windows:', error);
+    return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+  }
+});
+
 ipcMain.handle('load-icon-config', async () => {
   try {
     const configPath = path.join(__dirname, '..', 'config', 'icons.json');
@@ -304,5 +419,250 @@ ipcMain.handle('launch-steam-game', async (event, steamId: string) => {
     };
   }
 });
+
+// 창 레벨 설정 (다른 창에 덮이지 않도록)
+ipcMain.handle('set-window-level', async (event, level: string, windowId?: number) => {
+  try {
+    const targetWindow = windowId
+      ? BrowserWindow.fromId(windowId)
+      : mainWindow;
+
+    if (!targetWindow) {
+      return { success: false, error: 'Window not found' };
+    }
+
+    // alwaysOnTop과 레벨 설정
+    switch (level) {
+      case 'normal':
+        targetWindow.setAlwaysOnTop(false);
+        break;
+      case 'floating':
+        targetWindow.setAlwaysOnTop(true, 'floating');
+        break;
+      case 'torn-off-menu':
+        targetWindow.setAlwaysOnTop(true, 'torn-off-menu');
+        break;
+      case 'modal-panel':
+        targetWindow.setAlwaysOnTop(true, 'modal-panel');
+        break;
+      case 'main-menu':
+        targetWindow.setAlwaysOnTop(true, 'main-menu');
+        break;
+      case 'status':
+        targetWindow.setAlwaysOnTop(true, 'status');
+        break;
+      case 'pop-up-menu':
+        targetWindow.setAlwaysOnTop(true, 'pop-up-menu');
+        break;
+      case 'screen-saver':
+        targetWindow.setAlwaysOnTop(true, 'screen-saver');
+        break;
+      default:
+        targetWindow.setAlwaysOnTop(true, 'floating');
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error('Failed to set window level:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error'
+    };
+  }
+});
+
+// 창을 다른 모든 창 위로 올리기
+ipcMain.handle('bring-to-front', async (event, windowId?: number) => {
+  try {
+    const targetWindow = windowId
+      ? BrowserWindow.fromId(windowId)
+      : mainWindow;
+
+    if (!targetWindow) {
+      return { success: false, error: 'Window not found' };
+    }
+
+    targetWindow.moveTop();
+    targetWindow.focus();
+    return { success: true };
+  } catch (error) {
+    console.error('Failed to bring window to front:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error'
+    };
+  }
+});
+
+// 창의 포커스 상태 설정
+ipcMain.handle('set-focusable', async (event, focusable: boolean, windowId?: number) => {
+  try {
+    const targetWindow = windowId
+      ? BrowserWindow.fromId(windowId)
+      : mainWindow;
+
+    if (!targetWindow) {
+      return { success: false, error: 'Window not found' };
+    }
+
+    targetWindow.setFocusable(focusable);
+    return { success: true };
+  } catch (error) {
+    console.error('Failed to set focusable:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error'
+    };
+  }
+});
+
+// 설정 창 생성 함수
+let settingsWindow: BrowserWindow | null = null;
+
+function createSettingsWindow(): void {
+  if (settingsWindow) {
+    settingsWindow.focus();
+    return;
+  }
+
+  settingsWindow = new BrowserWindow({
+    width: 800,
+    height: 700,
+    minWidth: 600,
+    minHeight: 500,
+    show: false,
+    center: true,
+    title: 'Custom Desktop Settings',
+    icon: path.join(__dirname, '../assets/icon.png'),
+    frame: true,
+    resizable: true,
+    maximizable: true,
+    minimizable: true,
+    closable: true,
+    alwaysOnTop: false,    modal: true,
+    parent: mainWindow || undefined,
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js'),
+      webSecurity: !isDev
+    }
+  });
+
+  // 설정 창 URL 로드
+  if (isDev) {
+    settingsWindow.loadURL('http://localhost:5173/#/settings');
+  } else {
+    settingsWindow.loadFile(path.join(__dirname, '../dist/index.html'), {
+      hash: 'settings'
+    });
+  }
+
+  settingsWindow.once('ready-to-show', () => {
+    settingsWindow?.show();
+  });
+
+  settingsWindow.on('closed', () => {
+    settingsWindow = null;
+  });
+}
+
+// 설정 창 열기
+ipcMain.handle('open-settings', async () => {
+  try {
+    createSettingsWindow();
+    return { success: true };
+  } catch (error) {
+    console.error('Failed to open settings:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error'
+    };
+  }
+});
+
+// 현재 설정 가져오기
+ipcMain.handle('get-config', async () => {
+  try {
+    return { success: true, config: appConfig };
+  } catch (error) {
+    console.error('Failed to get config:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error'
+    };
+  }
+});
+
+// 설정 저장하기
+ipcMain.handle('save-config', async (event, newConfig: AppConfig) => {
+  try {
+    const { saveConfig } = await import('./config-loader');
+    const saved = saveConfig(newConfig);
+    
+    if (saved) {
+      // 설정을 메모리에도 업데이트
+      appConfig = newConfig;
+      
+      // 메인 창에 설정 변경 알림
+      if (mainWindow) {
+        mainWindow.webContents.send('config-updated', newConfig);
+        
+        // 즉시 적용되는 설정들
+        applyWindowSettings(mainWindow, newConfig);
+      }
+      
+      return { success: true };
+    } else {
+      return { success: false, error: 'Failed to save config file' };
+    }
+  } catch (error) {
+    console.error('Failed to save config:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error'
+    };
+  }
+});
+
+// 창 설정을 즉시 적용하는 함수
+function applyWindowSettings(window: BrowserWindow, config: AppConfig): void {
+  try {
+    // 크기 및 위치 설정
+    const { x, y, width, height } = calculateWindowPosition(config.window, 0);
+    window.setSize(width, height);
+    window.setPosition(x, y);
+    
+    // 창 레벨 설정
+    switch (config.window.windowLevel) {
+      case 'alwaysOnTop':
+        window.setAlwaysOnTop(true);
+        break;
+      case 'stayBehind':
+        window.setAlwaysOnTop(false);
+        if (process.platform === 'win32') {
+          window.blur();
+        }
+        break;
+      case 'default':
+      default:
+        window.setAlwaysOnTop(false);
+        break;
+    }
+    
+    window.setResizable(config.window.resizable);
+    
+    // 작업표시줄 설정
+    window.setSkipTaskbar(config.behavior.hideFromTaskbar);
+    
+    // 모든 워크스페이스에서 보이기
+    if (config.window.visibleOnAllWorkspaces) {
+      window.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
+    }
+    
+  } catch (error) {
+    console.error('Failed to apply window settings:', error);
+  }
+}
 
 console.log('🚀 Electron app starting...');

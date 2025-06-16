@@ -1,6 +1,6 @@
 {
     "window": {
-        "width": 400,
+        "width": "80%",
         "height": 600,
         "position": {
             "x": "center-bottom",
@@ -10,22 +10,26 @@
         },
         "minWidth": 300,
         "minHeight": 400,
-        "alwaysOnTop": false,
+        "windowLevel": "alwaysOnTop",
         "resizable": true,
-        "movable": true
+        "movable": true,
+        "level": "floating",
+        "visibleOnAllWorkspaces": true,
+        "fullscreenable": false
     },
     "ui": {
         "theme": "dark",
-        "transparency": 0.95,
+        "transparency": 0.3,
         "borderRadius": 12,
         "showScrollbar": false,
         "showTitleBar": false,
+        "showSettingsButton": false,
         "roundedCorners": true
     },
     "behavior": {
         "hideToTray": true,
         "startMinimized": false,
-        "autoStart": false,
+        "autoStart": true,
         "hideFromTaskbar": true
     }
 }

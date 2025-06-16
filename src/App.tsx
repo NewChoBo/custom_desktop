@@ -1,17 +1,15 @@
-import React, { memo, useEffect, useMemo, useState } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import './App.css';
 import { IconGrid } from './components/IconGrid';
+import { SettingsPanel } from './components/SettingsPanel';
 import { IconConfig, IconData } from './types/IconTypes';
 
-// 설정 타입 정의
-interface UIConfig {
-  showTitleBar: boolean;
-  borderRadius: number;
-  roundedCorners: boolean;
+// 커스텀 타이틀바 컴포넌트
+interface CustomTitleBarProps {
+  onSettingsClick: () => void;
 }
 
-// 커스텀 타이틀바 컴포넌트
-const CustomTitleBar = memo(() => {
+const CustomTitleBar = memo<CustomTitleBarProps>(({ onSettingsClick }) => {
   const handleClose = () => {
     window.close();
   };
@@ -27,6 +25,14 @@ const CustomTitleBar = memo(() => {
         <span className="app-name">Desktop Icons</span>
       </div>
       <div className="titlebar-controls" style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}>
+        <button
+          className="titlebar-button settings"
+          onClick={onSettingsClick}
+          aria-label="설정"
+          title="설정"
+        >
+          ⚙️
+        </button>
         <button
           className="titlebar-button minimize"
           onClick={handleMinimize}
@@ -52,15 +58,56 @@ CustomTitleBar.displayName = 'CustomTitleBar';
 
 // 메인 앱 컴포넌트
 const App: React.FC = () => {
-  // 설정 상태 (실제로는 Electron에서 가져와야 하지만 임시로 기본값 사용)
-  const [uiConfig] = useState<UIConfig>({
-    showTitleBar: false, // 기본값: 타이틀바 숨김
-    borderRadius: 12,
-    roundedCorners: true,
-  });  // 아이콘 설정 로드
+  // 설정 패널 상태
+  const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
+  
+  // 앱 설정 상태
+  const [appConfig, setAppConfig] = useState<AppConfig | null>(null);
+  
+  // 아이콘 설정 로드
   const [iconConfig, setIconConfig] = useState<IconConfig | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+
+  // 설정 패널 핸들러
+  const handleSettingsOpen = useCallback(() => {
+    setIsSettingsOpen(true);
+  }, []);
+
+  const handleSettingsClose = useCallback(() => {
+    setIsSettingsOpen(false);
+  }, []);
+
+  // 앱 설정 로드
+  useEffect(() => {
+    const loadAppConfig = async () => {
+      try {
+        if (window.electronAPI?.getConfig) {
+          const result = await window.electronAPI.getConfig();
+          if (result.success && result.config) {
+            setAppConfig(result.config);
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load app config:', err);
+      }
+    };
+
+    loadAppConfig();
+
+    // 설정 변경 리스너
+    if (window.electronAPI?.onConfigUpdated) {
+      window.electronAPI.onConfigUpdated((newConfig: AppConfig) => {
+        setAppConfig(newConfig);
+      });
+    }
+
+    return () => {
+      if (window.electronAPI?.removeConfigUpdatedListener) {
+        window.electronAPI.removeConfigUpdatedListener();
+      }
+    };
+  }, []);
 
   // 기본 아이콘 설정 (폴백용)
   const defaultIconConfig: IconConfig = useMemo(() => ({
@@ -194,19 +241,32 @@ const App: React.FC = () => {
       console.error('Failed to execute icon action:', error);
     }
   };
-
   // CSS 변수 설정
   const appStyle = useMemo(() => ({
-    '--border-radius': `${uiConfig.borderRadius}px`,
-  } as React.CSSProperties), [uiConfig.borderRadius]);
+    '--border-radius': `${appConfig?.ui.borderRadius || 12}px`,
+  } as React.CSSProperties), [appConfig?.ui.borderRadius]);
+
+  // 로딩 중이면 로딩 화면 표시
+  if (!appConfig) {
+    return (
+      <div className="App">
+        <div className="loading">
+          <div className="loading-spinner">⏳</div>
+          <p>설정 로딩 중...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
-      className={`App ${uiConfig.roundedCorners ? 'rounded-corners' : ''}`}
+      className={`App ${appConfig.ui.roundedCorners ? 'rounded-corners' : ''}`}
       role="main"
       style={appStyle}
     >
-      {uiConfig.showTitleBar && <CustomTitleBar />}      <div className="app-content">
+      {appConfig.ui.showTitleBar && <CustomTitleBar onSettingsClick={handleSettingsOpen} />}
+      
+      <div className="app-content">
         {loading ? (
           <div className="loading">
             <div className="loading-spinner">⏳</div>
@@ -233,6 +293,24 @@ const App: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* 설정 패널 */}
+      <SettingsPanel 
+        isOpen={isSettingsOpen} 
+        onClose={handleSettingsClose} 
+      />
+
+      {/* 플로팅 설정 버튼 (조건부 표시) */}
+      {appConfig.ui.showSettingsButton && !appConfig.ui.showTitleBar && (
+        <button
+          className="floating-settings-button"
+          onClick={handleSettingsOpen}
+          aria-label="설정"
+          title="설정"
+        >
+          ⚙️
+        </button>
+      )}
     </div>
   )
 }

@@ -492,3 +492,206 @@
   margin: 0;
   font-size: 16px;
 }
+
+/* 멀티 모니터 제어 스타일 */
+.multi-monitor-control {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px;
+  color: #ffffff;
+}
+
+.multi-monitor-control.loading {
+  text-align: center;
+  padding: 40px;
+}
+
+.control-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 12px;
+}
+
+.control-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.close-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.display-list {
+  margin-bottom: 20px;
+}
+
+.display-list > p {
+  font-weight: 500;
+  margin-bottom: 12px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.display-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  transition: all 0.2s ease;
+}
+
+.display-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.display-info {
+  flex: 1;
+}
+
+.display-info strong {
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.primary-badge {
+  background: #4ade80;
+  color: #000000;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 8px;
+}
+
+.display-info small {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+}
+
+.create-window-button {
+  background: rgba(74, 222, 128, 0.2);
+  border: 1px solid rgba(74, 222, 128, 0.4);
+  color: #4ade80;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.create-window-button:hover {
+  background: rgba(74, 222, 128, 0.3);
+  border-color: rgba(74, 222, 128, 0.6);
+  transform: translateY(-1px);
+}
+
+.control-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.close-all-button,
+.refresh-button {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.close-all-button {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #ef4444;
+}
+
+.close-all-button:hover {
+  background: rgba(239, 68, 68, 0.3);
+  border-color: rgba(239, 68, 68, 0.6);
+}
+
+.refresh-button {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: rgba(59, 130, 246, 0.4);
+  color: #3b82f6;
+}
+
+.refresh-button:hover {
+  background: rgba(59, 130, 246, 0.3);
+  border-color: rgba(59, 130, 246, 0.6);
+}
+
+/* 플로팅 설정 버튼 */
+.floating-settings-button {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+  color: #ffffff;
+  -webkit-app-region: no-drag;
+}
+
+.floating-settings-button:hover {
+  background: rgba(0, 0, 0, 0.9);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: scale(1.1);
+}
+
+.floating-settings-button:active {
+  transform: scale(0.95);
+}
+
+/* 타이틀바 설정 버튼 */
+.titlebar-button.settings {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  font-size: 0.9rem;
+  padding: 4px 8px;
+  margin-right: 4px;
+}
+
+.titlebar-button.settings:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
