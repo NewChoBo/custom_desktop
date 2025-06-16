@@ -13,6 +13,8 @@
   z-index: 1000;
   user-select: none;
   -webkit-app-region: drag;
+  border-top-left-radius: var(--border-radius, 12px);
+  border-top-right-radius: var(--border-radius, 12px);
 }
 
 /* 커스텀 스크롤바 스타일 */
@@ -117,6 +119,14 @@
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+}
+
+/* 둥근 모서리 클래스 - 단순하고 확실한 방법 */
+.App.rounded-corners {
+  border-radius: var(--border-radius, 12px);
+  overflow: hidden;
+  /* 투명 배경 문제 해결을 위한 solid background */
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 .app-content {
@@ -276,4 +286,199 @@
   .App {
     background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
   }
+}
+
+/* 아이콘 그리드 스타일 */
+.icon-grid {
+  width: 100%;
+  height: 100%;
+  max-height: calc(100vh - 40px);
+  overflow: hidden;
+}
+
+.icon-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  min-height: 80px;
+  padding: 8px;
+  user-select: none;
+  border: 2px solid transparent;
+}
+
+.icon-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  filter: brightness(1.1);
+}
+
+.icon-item.selected {
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+}
+
+.icon-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  gap: 6px;
+}
+
+.icon-symbol {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 40px;
+}
+
+.icon-emoji {
+  font-size: 32px;
+  line-height: 1;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.icon-thumbnail {
+  max-width: 40px;
+  max-height: 40px;
+  object-fit: cover;
+  border-radius: 4px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.icon-title {
+  font-size: 11px;
+  font-weight: 500;
+  text-align: center;
+  line-height: 1.2;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* 큰 아이콘들을 위한 스타일 */
+.icon-item[style*="span 2"] .icon-emoji {
+  font-size: 48px;
+}
+
+.icon-item[style*="span 2"] .icon-thumbnail {
+  max-width: 60px;
+  max-height: 60px;
+}
+
+.icon-item[style*="span 2"] .icon-title {
+  font-size: 13px;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: initial;
+}
+
+/* 반응형 아이콘 크기 */
+@media (max-width: 500px) {
+  .icon-emoji {
+    font-size: 24px;
+  }
+  
+  .icon-thumbnail {
+    max-width: 30px;
+    max-height: 30px;
+  }
+  
+  .icon-title {
+    font-size: 10px;
+  }
+  
+  .icon-item {
+    min-height: 60px;
+    padding: 6px;
+  }
+}
+
+/* 로딩, 에러, 빈 상태 스타일 */
+.loading, .error, .no-icons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+  gap: 16px;
+}
+
+.loading {
+  font-size: 18px;
+}
+
+.loading-spinner {
+  font-size: 32px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.loading p {
+  margin: 0;
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.error {
+  color: #ff6b6b;
+}
+
+.error-icon {
+  font-size: 48px;
+  color: #ff6b6b;
+}
+
+.error p {
+  margin: 0;
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.retry-button {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.retry-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.no-icons {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.no-icons-icon {
+  font-size: 48px;
+  opacity: 0.5;
+}
+
+.no-icons p {
+  margin: 0;
+  font-size: 16px;
 }
