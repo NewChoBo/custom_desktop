@@ -11,7 +11,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getConfig: () => ipcRenderer.invoke('get-config'),
   saveConfig: (config: any) => ipcRenderer.invoke('save-config', config),
   openSettings: () => ipcRenderer.invoke('open-settings'),
-  
+
   // Configuration update listener
   onConfigUpdated: (callback: (config: any) => void) => {
     ipcRenderer.on('config-updated', (event, config) => callback(config));

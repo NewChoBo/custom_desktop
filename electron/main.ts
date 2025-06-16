@@ -11,6 +11,33 @@ let appConfig: AppConfig;
 
 const isDev = process.env.NODE_ENV === 'development';
 
+// stayBehind 모드를 위한 간단한 이벤트 리스너
+const stayBehindWindows = new Set<BrowserWindow>();
+
+function setupStayBehindMode(window: BrowserWindow): void {
+  stayBehindWindows.add(window);
+
+  // 포커스를 받으면 즉시 제거
+  const handleFocus = () => {
+    if (stayBehindWindows.has(window) && !window.isDestroyed()) {
+      window.blur();
+    }
+  };
+
+  // 이벤트 리스너 등록
+  window.on('focus', handleFocus);
+
+  // 창이 닫힐 때 정리
+  window.on('closed', () => {
+    stayBehindWindows.delete(window);
+  });
+}
+
+function stopStayBehindMode(): void {
+  // stayBehindWindows Set에서 모든 창 제거
+  stayBehindWindows.clear();
+}
+
 // 설정 기반으로 창을 배치하는 함수
 function setWindowPosition(window: BrowserWindow, displayIndex: number = 0): void {
   try {
@@ -61,7 +88,9 @@ function createWindow(displayIndex: number = 0, isMain: boolean = true): Browser
 
   // 창 크기 및 위치 계산
   const { x, y, width, height } = calculateWindowPosition(appConfig.window, displayIndex);
-  const window = new BrowserWindow({
+
+  // 창 설정 객체 생성
+  const windowOptions: Electron.BrowserWindowConstructorOptions = {
     width,
     height,
     x,
@@ -69,33 +98,41 @@ function createWindow(displayIndex: number = 0, isMain: boolean = true): Browser
     minWidth: appConfig.window.minWidth,
     minHeight: appConfig.window.minHeight,
     show: false,
-    // 가벼운 위젯 UI 설정
-    frame: false, // 타이틀바 완전 제거
-    transparent: !appConfig.ui.roundedCorners, // 둥근 모서리일 때는 투명도 비활성화
+
+    // UI 설정
+    frame: false,
+    transparent: !appConfig.ui.roundedCorners,
+
+    // 위젯 설정 - 항상 toolbar 타입으로 통일
+    type: 'toolbar',
     alwaysOnTop: appConfig.window.windowLevel === 'alwaysOnTop',
-    skipTaskbar: false,
+    skipTaskbar: appConfig.window.windowLevel === 'stayBehind' || appConfig.behavior.hideFromTaskbar,
+    focusable: appConfig.window.windowLevel !== 'stayBehind',
+
+    // 창 동작 설정
     resizable: appConfig.window.resizable,
     movable: appConfig.window.movable,
-    minimizable: false, // 최소화 버튼 제거
-    maximizable: false, // 최대화 버튼 제거
+    minimizable: false,
+    maximizable: false,
     closable: true,
-    focusable: true,
     fullscreenable: appConfig.window.fullscreenable || false,
-    // 창 레벨 설정 (다른 창에 덮이지 않도록)
-    ...(appConfig.window.level && { type: appConfig.window.level }),
+
+    // 보안 설정
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
       preload: path.join(__dirname, 'preload.js'),
       webSecurity: !isDev
-    },
-    // Windows에서 추가 설정
-    ...(process.platform === 'win32' && {
-      autoHideMenuBar: true,
-      type: appConfig.window.level || 'normal',
-      roundedCorners: appConfig.ui.roundedCorners // Windows 11에서 네이티브 둥근 모서리
-    })
-  });
+    }
+  };
+
+  // Windows 전용 설정
+  if (process.platform === 'win32') {
+    windowOptions.autoHideMenuBar = true;
+    windowOptions.roundedCorners = appConfig.ui.roundedCorners;
+  }
+
+  const window = new BrowserWindow(windowOptions);
 
   // Load the app
   if (isDev) {
@@ -103,45 +140,22 @@ function createWindow(displayIndex: number = 0, isMain: boolean = true): Browser
     window.webContents.openDevTools();
   } else {
     window.loadFile(path.join(__dirname, '../dist/index.html'));
-  }
-  // Show window when ready
+  }  // Show window when ready
   window.once('ready-to-show', () => {
     window.show();
 
-    // 작업표시줄 숨김 설정 적용
-    if (appConfig.behavior.hideFromTaskbar) {
+    // 작업표시줄 숨김 설정 (이미 창 생성 시 설정되었지만 확실히)
+    if (appConfig.behavior.hideFromTaskbar || appConfig.window.windowLevel === 'stayBehind') {
       window.setSkipTaskbar(true);
     }
 
     // 모든 워크스페이스에서 보이기 설정
     if (appConfig.window.visibleOnAllWorkspaces) {
       window.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
-    }    // 창 레벨 설정 적용
-    try {
-      switch (appConfig.window.windowLevel) {
-        case 'alwaysOnTop':
-          window.setAlwaysOnTop(true);
-          if (appConfig.window.level === 'floating') {
-            window.setAlwaysOnTop(true, 'floating');
-          } else if (appConfig.window.level === 'status') {
-            window.setAlwaysOnTop(true, 'status');
-          }
-          break;
-        case 'stayBehind':
-          window.setAlwaysOnTop(false);
-          // 창을 뒤로 보내기
-          if (process.platform === 'win32') {
-            window.blur();
-          }
-          break;
-        case 'default':
-        default:
-          window.setAlwaysOnTop(false);
-          break;
-      }
-    } catch (error) {
-      console.log('Failed to set window level:', error);
     }
+
+    // 창 레벨별 설정 적용
+    applyWindowLevelSettings(window, appConfig.window.windowLevel, isMain);
   });
 
   // Handle window close - 메인 창은 트레이로 숨기기, 서브 창은 닫기
@@ -151,9 +165,9 @@ function createWindow(displayIndex: number = 0, isMain: boolean = true): Browser
       window.hide();
     }
   });
-
   window.on('closed', () => {
     if (isMain) {
+      stopStayBehindMode(); // interval 정리
       mainWindow = null;
     }
   });
@@ -205,7 +219,7 @@ function createTray(): void {
     },
     {
       type: 'separator'
-    },    {
+    }, {
       label: '설정',
       type: 'normal',
       click: () => {
@@ -253,12 +267,14 @@ app.whenReady().then(() => {
 });
 
 app.on('window-all-closed', () => {
+  stopStayBehindMode(); // interval 정리
   if (process.platform !== 'darwin') {
     app.quit();
   }
 });
 
 app.on('before-quit', () => {
+  stopStayBehindMode(); // interval 정리
   isQuitting = true;
 });
 
@@ -539,7 +555,7 @@ function createSettingsWindow(): void {
     maximizable: true,
     minimizable: true,
     closable: true,
-    alwaysOnTop: false,    modal: true,
+    alwaysOnTop: false, modal: true,
     parent: mainWindow || undefined,
     webPreferences: {
       nodeIntegration: false,
@@ -599,19 +615,19 @@ ipcMain.handle('save-config', async (event, newConfig: AppConfig) => {
   try {
     const { saveConfig } = await import('./config-loader');
     const saved = saveConfig(newConfig);
-    
+
     if (saved) {
       // 설정을 메모리에도 업데이트
       appConfig = newConfig;
-      
+
       // 메인 창에 설정 변경 알림
       if (mainWindow) {
         mainWindow.webContents.send('config-updated', newConfig);
-        
+
         // 즉시 적용되는 설정들
         applyWindowSettings(mainWindow, newConfig);
       }
-      
+
       return { success: true };
     } else {
       return { success: false, error: 'Failed to save config file' };
@@ -632,36 +648,52 @@ function applyWindowSettings(window: BrowserWindow, config: AppConfig): void {
     const { x, y, width, height } = calculateWindowPosition(config.window, 0);
     window.setSize(width, height);
     window.setPosition(x, y);
-    
-    // 창 레벨 설정
-    switch (config.window.windowLevel) {
+
+    // 창 레벨 설정 (새로운 함수 사용)
+    applyWindowLevelSettings(window, config.window.windowLevel, true);
+
+    // 기본 설정들
+    window.setResizable(config.window.resizable);
+    window.setSkipTaskbar(config.behavior.hideFromTaskbar || config.window.windowLevel === 'stayBehind');
+
+    // 모든 워크스페이스에서 보이기
+    if (config.window.visibleOnAllWorkspaces) {
+      window.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
+    }
+
+  } catch (error) {
+    console.error('Failed to apply window settings:', error);
+  }
+}
+
+// 창 레벨별 설정을 적용하는 함수
+function applyWindowLevelSettings(window: BrowserWindow, windowLevel: string, isMain: boolean): void {
+  try {
+    switch (windowLevel) {
       case 'alwaysOnTop':
         window.setAlwaysOnTop(true);
-        break;
-      case 'stayBehind':
-        window.setAlwaysOnTop(false);
-        if (process.platform === 'win32') {
-          window.blur();
+        if (appConfig.window.level === 'floating') {
+          window.setAlwaysOnTop(true, 'floating');
+        } else if (appConfig.window.level === 'status') {
+          window.setAlwaysOnTop(true, 'status');
         }
         break;
+
+      case 'stayBehind':
+        window.setAlwaysOnTop(false);
+        window.blur(); // 즉시 포커스 제거
+        if (isMain) {
+          setupStayBehindMode(window);
+        }
+        break;
+
       case 'default':
       default:
         window.setAlwaysOnTop(false);
         break;
     }
-    
-    window.setResizable(config.window.resizable);
-    
-    // 작업표시줄 설정
-    window.setSkipTaskbar(config.behavior.hideFromTaskbar);
-    
-    // 모든 워크스페이스에서 보이기
-    if (config.window.visibleOnAllWorkspaces) {
-      window.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
-    }
-    
   } catch (error) {
-    console.error('Failed to apply window settings:', error);
+    console.log('Failed to set window level:', error);
   }
 }
 

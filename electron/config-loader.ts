@@ -44,7 +44,8 @@ export interface AppConfig {
     behavior: BehaviorConfig;
 }
 
-const defaultConfig: AppConfig = {    window: {
+const defaultConfig: AppConfig = {
+    window: {
         width: 400,
         height: 600,
         position: {
@@ -98,12 +99,12 @@ export function saveConfig(config: AppConfig): boolean {
     try {
         const configPath = path.join(__dirname, '../config/window-config.json');
         const configDir = path.dirname(configPath);
-        
+
         // 디렉토리가 없으면 생성
         if (!fs.existsSync(configDir)) {
             fs.mkdirSync(configDir, { recursive: true });
         }
-        
+
         // 설정을 JSON 파일로 저장
         fs.writeFileSync(configPath, JSON.stringify(config, null, 4), 'utf8');
         console.log('Config saved successfully');

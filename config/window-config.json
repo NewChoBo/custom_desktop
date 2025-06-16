@@ -10,10 +10,10 @@
         },
         "minWidth": 300,
         "minHeight": 400,
-        "windowLevel": "alwaysOnTop",
+        "windowLevel": "stayBehind",
         "resizable": true,
         "movable": true,
-        "level": "floating",
+        "level": "normal",
         "visibleOnAllWorkspaces": true,
         "fullscreenable": false
     },

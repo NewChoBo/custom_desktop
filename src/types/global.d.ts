@@ -1,7 +1,8 @@
 export { };
 
 declare global {
-    interface Window {        electronAPI: {
+    interface Window {
+        electronAPI: {
             platform: string;
             version: string;
             loadIconConfig: () => Promise<any>;
@@ -14,7 +15,7 @@ declare global {
             launchApp: (path: string) => Promise<{ success: boolean; error?: string }>;
             openUrl: (url: string) => Promise<{ success: boolean; error?: string }>;
             openDirectory: (path: string) => Promise<{ success: boolean; error?: string }>;
-            launchSteamGame: (steamId: string) => Promise<{ success: boolean; error?: string }>;getDisplays: () => Promise<DisplayInfo[]>;
+            launchSteamGame: (steamId: string) => Promise<{ success: boolean; error?: string }>; getDisplays: () => Promise<DisplayInfo[]>;
             createWindow: (displayIndex: number) => Promise<{ success: boolean; windowId?: number; error?: string }>;
             closeAllWindows: () => Promise<{ success: boolean; error?: string }>;
             setWindowLevel: (level: WindowLevel, windowId?: number) => Promise<{ success: boolean; error?: string }>;

@@ -60,10 +60,10 @@ CustomTitleBar.displayName = 'CustomTitleBar';
 const App: React.FC = () => {
   // 설정 패널 상태
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
-  
+
   // 앱 설정 상태
   const [appConfig, setAppConfig] = useState<AppConfig | null>(null);
-  
+
   // 아이콘 설정 로드
   const [iconConfig, setIconConfig] = useState<IconConfig | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -265,7 +265,7 @@ const App: React.FC = () => {
       style={appStyle}
     >
       {appConfig.ui.showTitleBar && <CustomTitleBar onSettingsClick={handleSettingsOpen} />}
-      
+
       <div className="app-content">
         {loading ? (
           <div className="loading">
@@ -295,9 +295,9 @@ const App: React.FC = () => {
       </div>
 
       {/* 설정 패널 */}
-      <SettingsPanel 
-        isOpen={isSettingsOpen} 
-        onClose={handleSettingsClose} 
+      <SettingsPanel
+        isOpen={isSettingsOpen}
+        onClose={handleSettingsClose}
       />
 
       {/* 플로팅 설정 버튼 (조건부 표시) */}
