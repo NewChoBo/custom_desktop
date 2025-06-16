@@ -68,9 +68,16 @@ jobs:
         id: version
         run: |
           if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT          else
+            echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+          else
             echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
           fi
+
+      - name: Delete existing release if exists
+        run: |
+          gh release delete ${{ steps.version.outputs.version }} --yes || echo "Release does not exist"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
