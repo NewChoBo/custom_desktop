@@ -11,55 +11,83 @@
         "debug.overrideEngine": "automatic",
         "debug.testOverrideProxyUrl": "",
         "debug.overrideProxyUrl": "",
-        "length": 500,
+        "length": 750,
         "temperature": "",
         "top_p": "",
         "stops": {
-            "*": ["\n\n\n"],
-            "python": ["\ndef ", "\nclass ", "\nif ", "\n\n#"]
+            "*": [
+                "\n\n\n"
+            ],
+            "typescript": [
+                "\n\n//",
+                "\n\nexport",
+                "\n\ninterface",
+                "\n\ntype"
+            ],
+            "typescriptreact": [
+                "\n\n//",
+                "\n\nexport",
+                "\n\ninterface",
+                "\n\nconst"
+            ],
+            "javascript": [
+                "\n\n//",
+                "\n\nexport",
+                "\n\nfunction",
+                "\n\nconst"
+            ],
+            "javascriptreact": [
+                "\n\n//",
+                "\n\nexport",
+                "\n\nfunction",
+                "\n\nconst"
+            ],
+            "python": [
+                "\ndef ",
+                "\nclass ",
+                "\nif ",
+                "\n\n#"
+            ]
         },
         "indentationMode": {
             "*": "visual",
+            "typescript": "language",
+            "typescriptreact": "language",
+            "javascript": "language",
+            "javascriptreact": "language",
             "python": "language"
         },
-        "inlineSuggestCount": 3    },
-    
+        "inlineSuggestCount": 5
+    },
     // TypeScript/JavaScript 특화 설정
     "typescript.suggest.completeFunctionCalls": true,
     "javascript.suggest.completeFunctionCalls": true,
     "typescript.preferences.includePackageJsonAutoImports": "on",
     "javascript.preferences.includePackageJsonAutoImports": "on",
-    
     // React 개발을 위한 설정
     "emmet.includeLanguages": {
         "javascript": "javascriptreact",
         "typescript": "typescriptreact"
     },
     "emmet.triggerExpansionOnTab": true,
-    
     // Electron 개발을 위한 설정
     "typescript.preferences.quotestyle": "single",
     "javascript.preferences.quotestyle": "single",
-    
     // 코드 품질 설정
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
         "source.fixAll": "explicit",
         "source.organizeImports": "explicit"
     },
-    
     // Copilot Chat 설정
     "github.copilot.chat.enableCodeActions": true,
     "github.copilot.chat.localeOverride": "ko",
-    
     // 인라인 제안 설정
     "editor.inlineSuggest.enabled": true,
     "editor.inlineSuggest.showToolbar": "onHover",
-    
     // 자동완성 설정
     "editor.suggestSelection": "first",
     "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
-    
     // 파일별 Copilot 활성화
     "files.associations": {
         "*.tsx": "typescriptreact",

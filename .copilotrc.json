@@ -1,0 +1,68 @@
+{
+    "project": {
+        "name": "Custom Desktop Icons",
+        "description": "Modern cross-platform desktop icon management tool with Steam integration",
+        "type": "electron-react-typescript",
+        "version": "2.0.0"
+    },
+    "context": {
+        "framework": "electron",
+        "frontend": "react",
+        "language": "typescript",
+        "buildTool": "vite",
+        "packageManager": "npm"
+    },
+    "preferences": {
+        "codeStyle": {
+            "quotes": "single",
+            "semicolons": true,
+            "indentation": 2,
+            "lineLength": 80,
+            "trailingCommas": "es5"
+        },
+        "patterns": {
+            "components": "functional-hooks",
+            "stateManagement": "react-hooks",
+            "errorHandling": "try-catch",
+            "imports": "path-aliases"
+        }
+    },
+    "guidelines": [
+        "Use strict TypeScript typing, avoid any",
+        "Prefer functional components with hooks",
+        "Use path aliases (@/components, @/utils)",
+        "Follow Electron security best practices",
+        "Implement proper IPC communication",
+        "Handle cross-platform compatibility",
+        "Use React.memo for performance optimization",
+        "Provide meaningful error messages"
+    ],
+    "fileTypes": {
+        "components": [
+            "src/components/**/*.tsx",
+            "src/components/**/*.ts"
+        ],
+        "hooks": [
+            "src/hooks/**/*.ts"
+        ],
+        "utils": [
+            "src/utils/**/*.ts"
+        ],
+        "types": [
+            "src/types/**/*.ts"
+        ],
+        "electron": [
+            "electron/**/*.ts"
+        ],
+        "styles": [
+            "src/styles/**/*.css"
+        ]
+    },
+    "ignorePatterns": [
+        "node_modules/**",
+        "dist/**",
+        "dist-electron/**",
+        "*.log",
+        "package-lock.json"
+    ]
+}
