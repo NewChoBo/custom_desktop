@@ -12,6 +12,11 @@ dist-electron/
 build/
 *.local
 
+# Electron Builder
+release/
+app/
+packages/
+
 # Runtime data
 pids
 *.pid

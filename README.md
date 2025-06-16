@@ -35,19 +35,82 @@ npm run dev
 
 ## 🔧 Development Scripts
 
+### 👨‍💻 Development (Daily Use)
+
 ```bash
 # Development mode (React + Electron with hot reload)
 npm run dev
 
-# Build React app
-npm run build:vite
-
-# Build Electron app
-npm run build:electron
-
-# Build entire project
+# Build for development testing
 npm run build
+
+# Individual builds
+npm run build:vite      # Build React app only
+npm run build:electron  # Build Electron TypeScript only
 ```
+
+### 🚀 Release (Distribution)
+
+```bash
+# Create executable (unpacked)
+npm run release:pack
+
+# Create installers for all platforms
+npm run release:dist
+
+# Create installers for specific platforms
+npm run release:win     # Windows
+npm run release:mac     # macOS
+npm run release:linux   # Linux
+```
+
+## 📦 Release & Distribution
+
+### 🤖 Automated Builds with GitHub Actions
+
+This project uses GitHub Actions to automatically build and release the application for all platforms.
+
+#### 🏷️ Creating a Release
+
+1. **Tag-based Release (Recommended)**:
+   ```bash
+   git tag v1.0.0
+   git push origin v1.0.0
+   ```
+
+2. **Manual Release**:
+   - Go to Actions tab in GitHub
+   - Run "Build and Release" workflow
+   - Enter version number (e.g., v1.0.0)
+
+#### 📥 Download Links
+
+Once released, users can download:
+- **Windows**: `.exe` installer or portable `.zip`
+- **macOS**: `.dmg` installer  
+- **Linux**: `.AppImage` portable or `.deb` package
+
+#### 🔧 Build Outputs
+
+The GitHub Actions workflow creates:
+- Windows: NSIS installer + portable version
+- macOS: DMG installer + ZIP archive
+- Linux: AppImage + Debian package
+
+### 🛠️ Local Building
+
+```bash
+# Install dependencies
+npm install
+
+# Build for current platform
+npm run dist
+
+# Build for all platforms (requires additional setup)
+npm run dist:win && npm run dist:mac && npm run dist:linux
+```
+
+Built packages will be in the `release/` directory.
 
 ## 🖥️ Multi-Monitor Support
 

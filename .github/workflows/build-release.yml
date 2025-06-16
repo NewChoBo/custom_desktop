@@ -1,0 +1,113 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., v1.0.0)'
+        required: true
+        default: 'v1.0.0'
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+        
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Build Electron app
+        run: npm run pack
+        
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.os }}-build
+          path: release/
+          retention-days: 7
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+          
+      - name: Display downloaded files
+        run: find ./artifacts -type f -name "*.exe" -o -name "*.app" -o -name "*.AppImage" | head -20
+        
+      - name: Get version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+          else
+            echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          fi
+          
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.version }}
+          name: Custom Desktop Icons ${{ steps.version.outputs.version }}
+          body: |
+            ## 🎯 Custom Desktop Icons ${{ steps.version.outputs.version }}
+            
+            ### 📥 Downloads
+            Choose the appropriate file for your operating system:
+            
+            - **Windows**: `Custom Desktop Icons.exe` (from windows-latest-build.zip)
+            - **macOS**: `Custom Desktop Icons.app` (from macos-latest-build.zip)  
+            - **Linux**: Executable file (from ubuntu-latest-build.zip)
+            
+            ### ✨ Key Features
+            - 🎮 Steam integration for gaming shortcuts
+            - 🖥️ System tray integration with settings GUI
+            - 📐 Flexible window positioning (percentage-based sizing)
+            - 🖼️ Multi-monitor support
+            - 🎯 Widget-style "stayBehind" desktop mode
+            - 🎨 Modern glassmorphic UI design
+            
+            ### 🚀 Quick Start
+            1. Download and extract the appropriate file for your OS
+            2. Run the executable
+            3. Right-click the system tray icon for settings
+            4. Customize window position, size, and behavior
+            
+            ### 💡 Usage Tips
+            - Access all settings via system tray (primary method)
+            - Use "stayBehind" mode for true desktop widget experience
+            - Supports percentage-based window sizing (e.g., "80%" width)
+            - Multi-monitor: Create windows on different displays
+            
+            ---
+            *Built with Electron + React + TypeScript*
+          draft: false
+          prerelease: false
+          files: |
+            artifacts/**/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
