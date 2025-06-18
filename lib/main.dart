@@ -32,7 +32,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> with TrayListener {
-
   @override
   void initState() {
     super.initState();
@@ -45,7 +44,6 @@ class _MyAppState extends State<MyApp> with TrayListener {
     trayManager.removeListener(this);
     super.dispose();
   }
-
   Future<void> _initSystemTray() async {
     try {
       await trayManager.setIcon('assets/app_icon.ico');
@@ -78,14 +76,19 @@ class _MyAppState extends State<MyApp> with TrayListener {
 
   @override
   void onTrayIconMouseDown() {
-    debugPrint('Tray icon mouse down');
+    debugPrint('Tray icon left clicked');
     _toggleWindow();
   }
-
   @override
-  void onTrayIconRightMouseDown() {
-    debugPrint('Tray icon right mouse down');
-    trayManager.popUpContextMenu();
+  void onTrayIconRightMouseDown() async {
+    debugPrint('Tray icon right clicked');
+    
+    // 권장 방식: 윈도우 포커싱과 메뉴 팝업 분리
+    // 1) 창 보이기 & 포커스 주기
+    await windowManager.show();
+    await windowManager.focus();
+      // 2) 트레이 메뉴 팝업 (기본 옵션 사용 - 크로스 플랫폼 통일)
+    await trayManager.popUpContextMenu();
   }
 
   @override
