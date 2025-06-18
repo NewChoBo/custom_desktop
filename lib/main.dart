@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:window_manager/window_manager.dart';
-import 'package:system_tray/system_tray.dart';
+import 'package:tray_manager/tray_manager.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,37 +31,77 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
-  final SystemTray _systemTray = SystemTray();
+class _MyAppState extends State<MyApp> with TrayListener {
 
   @override
   void initState() {
     super.initState();
+    trayManager.addListener(this);
     _initSystemTray();
-  }  Future<void> _initSystemTray() async {
-    // 시스템 트레이 아이콘 설정
-    await _systemTray.initSystemTray(
-      title: "Custom Desktop",
-      iconPath: "assets/app_icon.ico",
-    );
+  }
 
-    // 트레이 메뉴 설정
-    final Menu menu = Menu();
-    await menu.buildFrom([
-      MenuItemLabel(label: 'Show', onClicked: (menuItem) => _showWindow()),
-      MenuItemLabel(label: 'Hide', onClicked: (menuItem) => _hideWindow()),
-      MenuSeparator(),
-      MenuItemLabel(label: 'Exit', onClicked: (menuItem) => _exitApp()),
-    ]);
+  @override
+  void dispose() {
+    trayManager.removeListener(this);
+    super.dispose();
+  }
 
-    await _systemTray.setContextMenu(menu);
+  Future<void> _initSystemTray() async {
+    try {
+      await trayManager.setIcon('assets/app_icon.ico');
+      await trayManager.setToolTip('Custom Desktop App - Right click for menu');
+      
+      Menu menu = Menu(
+        items: [
+          MenuItem(
+            key: 'show_window',
+            label: '📱 Show Window',
+          ),
+          MenuItem(
+            key: 'hide_window',
+            label: '👁️ Hide Window',
+          ),
+          MenuItem.separator(),
+          MenuItem(
+            key: 'exit_app',
+            label: '❌ Exit Application',
+          ),
+        ],
+      );
+      
+      await trayManager.setContextMenu(menu);
+      debugPrint('System tray initialized with context menu');
+    } catch (e) {
+      debugPrint('Error initializing system tray: $e');
+    }
+  }
 
-    // 트레이 아이콘 클릭 이벤트
-    _systemTray.registerSystemTrayEventHandler((eventName) {
-      if (eventName == kSystemTrayEventClick) {
-        _toggleWindow();
-      }
-    });
+  @override
+  void onTrayIconMouseDown() {
+    debugPrint('Tray icon mouse down');
+    _toggleWindow();
+  }
+
+  @override
+  void onTrayIconRightMouseDown() {
+    debugPrint('Tray icon right mouse down');
+    trayManager.popUpContextMenu();
+  }
+
+  @override
+  void onTrayMenuItemClick(MenuItem menuItem) {
+    debugPrint('Menu item clicked: ${menuItem.key}');
+    switch (menuItem.key) {
+      case 'show_window':
+        _showWindow();
+        break;
+      case 'hide_window':
+        _hideWindow();
+        break;
+      case 'exit_app':
+        _exitApp();
+        break;
+    }
   }
 
   void _showWindow() {
@@ -104,15 +144,6 @@ class _MyAppState extends State<MyApp> {
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
 
   @override
@@ -124,14 +155,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _incrementCounter() {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
       _counter++;
     });
-  }  @override
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       // 배경을 50% 투명하게 설정
