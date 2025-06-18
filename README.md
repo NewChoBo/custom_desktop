@@ -1,300 +1,171 @@
-# 🎯 Custom Desktop Icons
+# Custom Desktop App
 
-Modern cross-platform desktop icon management tool with Steam integration.
+A Flutter desktop application built with Clean Architecture and Feature-First approach.
 
-## ✨ Features
+## 🏗️ Architecture
 
-- 🎮 Steam integration for gaming icons
-- 🖥️ Cross-platform support (Windows, macOS, Linux)
-- ⚡ Fast and lightweight Electron app
-- 🎨 Modern, beautiful UI with React
-- 🔧 TypeScript for type safety
-- ⚙️ Vite for fast development
+This project follows **Clean Architecture + Feature-First** pattern for better maintainability, testability, and scalability.
 
-## 🚀 Tech Stack
+### Project Structure
 
-- **Frontend**: React 19 + TypeScript
-- **Desktop**: Electron 36
-- **Build Tool**: Vite 6
-- **Styling**: CSS3 with modern features
-- **Package Manager**: npm
-
-## 📦 Installation
-
-```bash
-# Clone the repository
-git clone <repository-url>
-cd custom_desktop
-
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
+```
+lib/
+├── main.dart                    # App entry point
+├── core/                        # App-wide common elements
+│   ├── app/
+│   │   └── app.dart            # Main app widget
+│   ├── constants/
+│   │   └── app_constants.dart  # App constants
+│   ├── di/
+│   │   └── injection.dart      # Dependency injection container
+│   ├── services/
+│   │   └── app_initialization_service.dart
+│   └── utils/
+│       └── platform_utils.dart # Platform utilities
+├── shared/                      # Shared components (widgets, models, extensions)
+│   ├── widgets/                # Reusable UI components
+│   ├── models/                 # Shared data models
+│   └── extensions/             # Dart extensions
+└── features/                    # Feature-based modules
+    ├── window_management/       # Window management feature
+    │   ├── data/
+    │   │   ├── datasources/
+    │   │   │   └── window_manager_datasource.dart
+    │   │   └── repositories/
+    │   │       └── window_repository_impl.dart
+    │   ├── domain/
+    │   │   ├── entities/
+    │   │   │   └── window_entity.dart
+    │   │   ├── repositories/
+    │   │   │   └── window_repository.dart
+    │   │   └── usecases/
+    │   │       └── window_usecases.dart
+    │   └── presentation/
+    │       ├── pages/
+    │       ├── widgets/
+    │       └── providers/
+    ├── system_tray/            # System tray feature
+    │   ├── data/
+    │   │   ├── datasources/
+    │   │   │   └── system_tray_datasource.dart
+    │   │   └── repositories/
+    │   │       └── system_tray_repository_impl.dart
+    │   ├── domain/
+    │   │   ├── entities/
+    │   │   │   └── system_tray_entity.dart
+    │   │   ├── repositories/
+    │   │   │   └── system_tray_repository.dart
+    │   │   └── usecases/
+    │   │       └── system_tray_usecases.dart
+    │   └── presentation/
+    │       └── providers/
+    │           └── system_tray_event_handler.dart
+    └── home/                   # Home screen feature
+        ├── data/
+        ├── domain/
+        └── presentation/
+            └── pages/
+                └── home_page.dart
 ```
 
-## 🔧 Development Scripts
+## 🚀 Features
 
-### 👨‍💻 Development (Daily Use)
+- **Window Management**: Control window visibility, size, and position
+- **System Tray Integration**: System tray icon with context menu
+- **Transparent UI**: Modern glassmorphism-style interface
+- **Cross-platform**: Supports Windows, macOS, and Linux
 
-```bash
-# Development mode (React + Electron with hot reload)
-npm run dev
+## 🛠️ Architecture Principles
 
-# Build for development testing
-npm run build
+### Clean Architecture Layers
 
-# Individual builds
-npm run build:vite      # Build React app only
-npm run build:electron  # Build Electron TypeScript only
+1. **Domain Layer** (`domain/`)
+   - Entities: Core business objects
+   - Repositories: Abstract contracts for data access
+   - Use Cases: Business logic implementations
+
+2. **Data Layer** (`data/`)
+   - Data Sources: External data access (APIs, local storage, etc.)
+   - Repository Implementations: Concrete implementations of domain repositories
+
+3. **Presentation Layer** (`presentation/`)
+   - Pages: UI screens
+   - Widgets: Reusable UI components
+   - Providers: State management (ready for Riverpod integration)
+
+### Key Benefits
+
+- ✅ **Separation of Concerns**: Each layer has a single responsibility
+- ✅ **Testability**: Easy to unit test each layer independently
+- ✅ **Maintainability**: Changes in one layer don't affect others
+- ✅ **Scalability**: Easy to add new features without affecting existing code
+- ✅ **Dependency Inversion**: High-level modules don't depend on low-level modules
+
+## 🔧 Import Strategy
+
+The project uses **absolute imports** with package prefix for better maintainability:
+
+```dart
+// ✅ Good: Absolute imports
+import 'package:custom_desktop/core/constants/app_constants.dart';
+import 'package:custom_desktop/features/window_management/domain/entities/window_entity.dart';
+
+// ❌ Avoid: Relative imports
+import '../../../core/constants/app_constants.dart';
+import '../../domain/entities/window_entity.dart';
 ```
 
-### 🚀 Release (Distribution)
+## 📦 Dependencies
 
-```bash
-# Create executable (unpacked)
-npm run release:pack
+- `window_manager: ^0.5.0` - Window management
+- `tray_manager: ^0.5.0` - System tray functionality
 
-# Create installers for all platforms
-npm run release:dist
+## 🚀 Getting Started
 
-# Create installers for specific platforms
-npm run release:win     # Windows
-npm run release:mac     # macOS
-npm run release:linux   # Linux
-```
-
-## 📦 Release & Distribution
-
-### 🤖 Automated Builds with GitHub Actions
-
-This project uses GitHub Actions to automatically build and release the application for all platforms.
-
-#### 🏷️ Creating a Release
-
-1. **Tag-based Release (Recommended)**:
+1. **Clone the repository**
    ```bash
-   git tag v1.0.0
-   git push origin v1.0.0
+   git clone <repository-url>
+   cd custom_desktop
    ```
 
-2. **Manual Release**:
-   - Go to Actions tab in GitHub
-   - Run "Build and Release" workflow
-   - Enter version number (e.g., v1.0.0)
+2. **Install dependencies**
+   ```bash
+   flutter pub get
+   ```
 
-#### 📥 Download Links
+3. **Run the app**
+   ```bash
+   flutter run
+   ```
 
-Once released, users can download:
-- **Windows**: `.exe` installer or portable `.zip`
-- **macOS**: `.dmg` installer  
-- **Linux**: `.AppImage` portable or `.deb` package
+4. **Build for production**
+   ```bash
+   flutter build windows  # for Windows
+   flutter build macos    # for macOS
+   flutter build linux    # for Linux
+   ```
 
-#### 🔧 Build Outputs
-
-The GitHub Actions workflow creates:
-- Windows: NSIS installer + portable version
-- macOS: DMG installer + ZIP archive
-- Linux: AppImage + Debian package
-
-### 🛠️ Local Building
+## 🧪 Testing
 
 ```bash
-# Install dependencies
-npm install
+# Run all tests
+flutter test
 
-# Build for current platform
-npm run dist
+# Run tests with coverage
+flutter test --coverage
 
-# Build for all platforms (requires additional setup)
-npm run dist:win && npm run dist:mac && npm run dist:linux
+# Analyze code
+flutter analyze
 ```
-
-Built packages will be in the `release/` directory.
-
-## 🖥️ Multi-Monitor Support
-
-This app supports multiple monitors and flexible window sizing:
-
-### 📐 Percentage-Based Window Sizing
-
-You can set window dimensions as percentages of the screen size:
-
-```json
-{
-  "window": {
-    "width": "80%",    // 80% of monitor width
-    "height": "70%",   // 70% of monitor height
-    "position": {
-      "x": "center",
-      "y": "center"
-    }
-  }
-}
-```
-
-### 🖼️ Multi-Monitor Features
-
-#### Create Windows on Different Monitors
-
-```javascript
-// Get available displays
-const displays = await window.electronAPI.getDisplays();
-
-// Create window on specific monitor
-await window.electronAPI.createWindow(1); // Monitor 2
-await window.electronAPI.createWindow(2); // Monitor 3
-```
-
-#### Multiple Windows on Same Monitor
-
-You can create multiple windows on the same monitor by calling `createWindow()` multiple times with the same display index.
-
-#### Example Configurations
-
-**Monitor 1 (80% width):**
-
-```json
-{
-  "window": {
-    "width": "80%",
-    "height": "90%",
-    "position": { "x": "left", "y": "center" }
-  }
-}
-```
-
-**Monitor 2 (Fixed size):**
-
-```json
-{
-  "window": {
-    "width": 400,
-    "height": 600,
-    "position": { "x": "right", "y": "bottom" }
-  }
-}
-```
-
-### 🔧 Available APIs
-
-- `getDisplays()` - Get list of all monitors
-- `createWindow(displayIndex)` - Create window on specific monitor
-- `closeAllWindows()` - Close all secondary windows
-
-### 📱 Position Options
-
-- `"center"` - Center of screen
-- `"left"` - Left side
-- `"right"` - Right side
-- `"top"` - Top of screen
-- `"bottom"` - Bottom of screen
-- `100` - Exact pixel position
-
-## 📁 Project Structure
-
-```
-custom_desktop/
-├── electron/          # Electron main process
-│   ├── main.ts        # Main process entry
-│   ├── preload.ts     # Preload script
-│   └── tsconfig.json  # Electron TypeScript config
-├── src/               # React app source
-│   ├── App.tsx        # Main React component
-│   ├── App.css        # Component styles
-│   ├── main.tsx       # React entry point
-│   └── index.css      # Global styles
-├── index.html         # HTML template
-├── package.json       # Dependencies and scripts
-├── tsconfig.json      # TypeScript configuration
-└── vite.config.ts     # Vite configuration
-```
-
-## 🎯 Development Goals
-
-- [x] Basic React + Electron setup
-- [x] TypeScript integration
-- [x] Modern UI with animations
-- [x] Development environment optimization
-- [ ] Steam integration
-- [ ] Icon management features
-- [ ] Cross-platform packaging
-- [ ] Auto-updater integration
-
-## AI Development with GitHub Copilot
-
-This project is optimized for GitHub Copilot development. Here are some tips:
-
-### 🎯 Copilot Context
-
-- **Project Type**: Electron + React + TypeScript desktop application
-- **Main Purpose**: Desktop icon management with Steam integration
-- **Key Technologies**: Electron 36, React 19, TypeScript 5.8, Vite 6
-
-### 💡 Copilot Usage Tips
-
-1. **File Context**: Keep relevant imports and type definitions visible
-2. **Comments**: Use descriptive comments to guide Copilot suggestions
-3. **Naming**: Use clear, descriptive variable and function names
-4. **Patterns**: Follow established patterns in the codebase
-
-### 🔧 Copilot Chat Commands
-
-```
-# In VS Code, use Ctrl+Shift+I to open Copilot Chat and try:
-/explain - Explain selected code
-/fix - Fix bugs in selected code
-/tests - Generate unit tests
-/doc - Generate documentation
-```
-
-### 📁 Key Directories for Copilot Context
-
-- `src/` - React frontend components
-- `electron/` - Electron main and preload scripts
-- `.vscode/` - VS Code workspace configuration
-
-## 📝 Commit Message Format
-
-This project follows **Conventional Commits** specification:
-
-```
-<type>(<scope>): <description>
-
-[optional body]
-[optional footer(s)]
-```
-
-### Commit Types
-
-- **feat(scope)**: New feature
-- **fix(scope)**: Bug fix
-- **docs**: Documentation changes
-- **chore**: Build process, tool changes
-- **refactor**: Code refactoring (no functionality change)
-- **test**: Adding/modifying tests
-- **hotfix**: Critical bug fix
-
-### Examples
-
-```bash
-feat(config): add flexible window positioning system
-fix(ui): resolve scrollbar visibility issues
-docs(readme): update configuration examples
-chore(deps): update electron to v36
-refactor(main): simplify window creation logic
-test(config): add unit tests for config loader
-hotfix(tray): fix tray icon display issue
-```
-
-### Common Scopes
-
-- `ui`, `config`, `main`, `tray`, `build`, `docs`, `test`, `deps`
 
 ## 🤝 Contributing
 
-This is a personal project, but suggestions and feedback are welcome!
+1. Follow the established architecture patterns
+2. Add new features as separate modules in `features/`
+3. Use absolute imports with package prefix
+4. Write tests for new functionality
+5. Follow Clean Architecture principles
 
-## 📄 License
+## 📝 License
 
-Private project - All rights reserved.
+This project is licensed under the MIT License - see the LICENSE file for details.
