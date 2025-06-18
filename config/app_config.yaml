@@ -1,0 +1,42 @@
+# 앱 설정 파일 - 빌드 후에도 동적으로 변경 가능
+app_settings:
+  title: "Dynamic Desktop App"
+  version: "1.0.0"
+  
+# 테마 설정
+theme:
+  primary_color: "#6A1B9A"  # 보라색
+  secondary_color: "#03DAC6"  # 시안색
+  background_opacity: 0.5
+  use_gradient: true
+  gradient_colors:
+    - "#6A1B9A"
+    - "#3F51B5"
+    - "#2196F3"
+  
+# 윈도우 설정
+window:
+  default_width: 900
+  default_height: 700
+  resizable: true
+  always_on_top: false
+  
+# UI 설정
+ui:
+  show_counter: true
+  counter_text: "버튼을 클릭한 횟수:"
+  button_text: "클릭!"
+  font_size: 16
+  
+# 시스템 트레이 설정
+tray:
+  tooltip: "사용자 정의 데스크톱 앱"
+  menu_items:
+    - label: "📱 창 보이기"
+      key: "show_window"
+    - label: "👁️창 숨기기"
+      key: "hide_window"
+    - label: "⚙️ 설정"
+      key: "settings"
+    - label: "❌ 종료"
+      key: "exit_app"
