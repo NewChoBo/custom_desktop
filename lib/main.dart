@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:window_manager/window_manager.dart';
+import 'package:system_tray/system_tray.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -11,7 +12,7 @@ Future<void> main() async {
     size: Size(800, 600),
     center: true,
     backgroundColor: Colors.transparent,
-    skipTaskbar: false,
+    skipTaskbar: true,  // 작업표시줄에서 숨기기
     titleBarStyle: TitleBarStyle.hidden, // 타이틀 바 숨기기
   );
   
@@ -23,8 +24,66 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final SystemTray _systemTray = SystemTray();
+
+  @override
+  void initState() {
+    super.initState();
+    _initSystemTray();
+  }  Future<void> _initSystemTray() async {
+    // 시스템 트레이 아이콘 설정
+    await _systemTray.initSystemTray(
+      title: "Custom Desktop",
+      iconPath: "assets/app_icon.ico",
+    );
+
+    // 트레이 메뉴 설정
+    final Menu menu = Menu();
+    await menu.buildFrom([
+      MenuItemLabel(label: 'Show', onClicked: (menuItem) => _showWindow()),
+      MenuItemLabel(label: 'Hide', onClicked: (menuItem) => _hideWindow()),
+      MenuSeparator(),
+      MenuItemLabel(label: 'Exit', onClicked: (menuItem) => _exitApp()),
+    ]);
+
+    await _systemTray.setContextMenu(menu);
+
+    // 트레이 아이콘 클릭 이벤트
+    _systemTray.registerSystemTrayEventHandler((eventName) {
+      if (eventName == kSystemTrayEventClick) {
+        _toggleWindow();
+      }
+    });
+  }
+
+  void _showWindow() {
+    windowManager.show();
+    windowManager.focus();
+  }
+
+  void _hideWindow() {
+    windowManager.hide();
+  }
+
+  void _toggleWindow() async {
+    if (await windowManager.isVisible()) {
+      _hideWindow();
+    } else {
+      _showWindow();
+    }
+  }
+
+  void _exitApp() {
+    windowManager.close();
+  }
 
   @override
   Widget build(BuildContext context) {
