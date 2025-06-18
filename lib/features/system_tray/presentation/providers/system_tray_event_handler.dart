@@ -3,6 +3,7 @@ import 'package:tray_manager/tray_manager.dart';
 import 'package:custom_desktop/features/system_tray/domain/entities/system_tray_entity.dart';
 import 'package:custom_desktop/core/di/injection.dart';
 import 'package:custom_desktop/core/constants/app_constants.dart';
+import 'package:custom_desktop/core/services/window_service.dart';
 
 /// 시스템 트레이 이벤트 핸들러
 class SystemTrayEventHandler with TrayListener {
@@ -71,10 +72,9 @@ class SystemTrayEventHandler with TrayListener {
   }
 
   /// Settings 메뉴 클릭 처리
-  void _handleSettingsClick() {
+  void _handleSettingsClick() async {
     debugPrint('Settings menu clicked - opening settings...');
-    // TODO [Copilot]: Settings 기능 구현 후 여기에 설정 화면 열기 로직 추가
-    // 현재는 윈도우를 보여주기만 함
-    DependencyInjection.instance.showWindowUseCase();
+    // 설정 윈도우를 별도 창으로 열기
+    await WindowService.openSettingsWindow();
   }
 }
