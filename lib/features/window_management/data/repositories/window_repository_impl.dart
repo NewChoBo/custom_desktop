@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:custom_desktop/features/window_management/domain/entities/window_entity.dart';
 import 'package:custom_desktop/features/window_management/domain/repositories/window_repository.dart';
 import 'package:custom_desktop/features/window_management/data/datasources/window_manager_datasource.dart';
@@ -25,7 +27,7 @@ class WindowRepositoryImpl implements WindowRepository {
 
   @override
   Future<void> toggle() async {
-    final isCurrentlyVisible = await dataSource.isVisible();
+    final bool isCurrentlyVisible = await dataSource.isVisible();
     if (isCurrentlyVisible) {
       await dataSource.hide();
     } else {
@@ -40,9 +42,9 @@ class WindowRepositoryImpl implements WindowRepository {
 
   @override
   Future<WindowEntity> getWindowState() async {
-    final isVisible = await dataSource.isVisible();
-    final size = await dataSource.getSize();
-    final position = await dataSource.getPosition();
+    final bool isVisible = await dataSource.isVisible();
+    final Size size = await dataSource.getSize();
+    final Offset position = await dataSource.getPosition();
 
     return WindowEntity(
       isVisible: isVisible,

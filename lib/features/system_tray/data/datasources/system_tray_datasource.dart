@@ -28,7 +28,7 @@ class SystemTrayDataSource with TrayListener {
 
   /// 컨텍스트 메뉴 설정
   Future<void> setContextMenu(List<MenuItem> menuItems) async {
-    final menu = Menu(items: menuItems);
+    final Menu menu = Menu(items: menuItems);
     await trayManager.setContextMenu(menu);
   }
 
