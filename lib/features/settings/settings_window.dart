@@ -1,8 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:custom_desktop/core/services/window_service.dart';
 
 /// 간단한 설정 윈도우
-class SettingsWindow extends StatelessWidget {
+class SettingsWindow extends StatefulWidget {
   const SettingsWindow({super.key});
+
+  @override
+  State<SettingsWindow> createState() => _SettingsWindowState();
+}
+
+class _SettingsWindowState extends State<SettingsWindow> {
+  @override
+  void dispose() {
+    // 윈도우가 닫힐 때 상태 초기화
+    WindowService.resetSettingsWindowState();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

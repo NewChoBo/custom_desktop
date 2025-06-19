@@ -47,8 +47,7 @@ class SystemTrayEventHandler with TrayListener {
   @override
   void onTrayIconRightMouseDown() async {
     debugPrint(DebugMessages.trayRightClick);
-    // 윈도우 보이기 & 메뉴 팝업
-    await DependencyInjection.instance.showWindowUseCase();
+    // 메뉴 팝업 표시
     await DependencyInjection.instance.popUpTrayMenuUseCase();
   }
 
