@@ -34,7 +34,8 @@ class AppConstants {
 
 /// 디버그 메시지 상수
 class DebugMessages {
-  static const String trayInitialized = 'System tray initialized with context menu';
+  static const String trayInitialized =
+      'System tray initialized with context menu';
   static const String trayInitError = 'Error initializing system tray';
   static const String trayLeftClick = 'Tray icon left clicked';
   static const String trayRightClick = 'Tray icon right clicked';

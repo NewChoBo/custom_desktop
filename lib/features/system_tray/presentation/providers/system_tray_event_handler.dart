@@ -7,7 +7,8 @@ import 'package:custom_desktop/core/constants/app_constants.dart';
 /// 시스템 트레이 이벤트 핸들러
 class SystemTrayEventHandler with TrayListener {
   static SystemTrayEventHandler? _instance;
-  static SystemTrayEventHandler get instance => _instance ??= SystemTrayEventHandler._();
+  static SystemTrayEventHandler get instance =>
+      _instance ??= SystemTrayEventHandler._();
 
   SystemTrayEventHandler._();
 
@@ -20,12 +21,24 @@ class SystemTrayEventHandler with TrayListener {
   /// 기본 메뉴 설정
   void _setupDefaultMenu() {
     final List<SystemTrayMenuEntity> menuItems = <SystemTrayMenuEntity>[
-      const SystemTrayMenuEntity(key: AppConstants.showWindowKey, label: AppConstants.showWindowLabel),
-      const SystemTrayMenuEntity(key: AppConstants.hideWindowKey, label: AppConstants.hideWindowLabel),
+      const SystemTrayMenuEntity(
+        key: AppConstants.showWindowKey,
+        label: AppConstants.showWindowLabel,
+      ),
+      const SystemTrayMenuEntity(
+        key: AppConstants.hideWindowKey,
+        label: AppConstants.hideWindowLabel,
+      ),
       const SystemTrayMenuEntity.separator(),
-      const SystemTrayMenuEntity(key: AppConstants.settingsKey, label: AppConstants.settingsLabel),
+      const SystemTrayMenuEntity(
+        key: AppConstants.settingsKey,
+        label: AppConstants.settingsLabel,
+      ),
       const SystemTrayMenuEntity.separator(),
-      const SystemTrayMenuEntity(key: AppConstants.exitAppKey, label: AppConstants.exitAppLabel),
+      const SystemTrayMenuEntity(
+        key: AppConstants.exitAppKey,
+        label: AppConstants.exitAppLabel,
+      ),
     ];
 
     DependencyInjection.instance.setTrayContextMenuUseCase(menuItems);

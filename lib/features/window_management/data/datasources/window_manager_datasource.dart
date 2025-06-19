@@ -5,16 +5,20 @@ import 'package:custom_desktop/core/constants/app_constants.dart';
 /// 윈도우 매니저 데이터 소스
 class WindowManagerDataSource {
   static const WindowOptions _defaultWindowOptions = WindowOptions(
-    size: Size(AppConstants.defaultWindowWidth, AppConstants.defaultWindowHeight),
+    size: Size(
+      AppConstants.defaultWindowWidth,
+      AppConstants.defaultWindowHeight,
+    ),
     center: true,
     backgroundColor: Colors.transparent,
     skipTaskbar: true,
     titleBarStyle: TitleBarStyle.hidden,
   );
+
   /// 윈도우 매니저 초기화
   Future<void> initialize() async {
     await windowManager.ensureInitialized();
-    
+
     windowManager.waitUntilReadyToShow(_defaultWindowOptions, () async {
       await windowManager.show();
       await windowManager.focus();
