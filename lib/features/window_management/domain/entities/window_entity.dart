@@ -7,7 +7,7 @@ class WindowEntity {
   final double height;
   final double x;
   final double y;
-  
+
   const WindowEntity({
     required this.isVisible,
     required this.isFocused,
@@ -17,7 +17,7 @@ class WindowEntity {
     required this.x,
     required this.y,
   });
-  
+
   WindowEntity copyWith({
     bool? isVisible,
     bool? isFocused,
@@ -37,7 +37,7 @@ class WindowEntity {
       y: y ?? this.y,
     );
   }
-  
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -50,7 +50,7 @@ class WindowEntity {
           height == other.height &&
           x == other.x &&
           y == other.y;
-  
+
   @override
   int get hashCode =>
       isVisible.hashCode ^
@@ -60,7 +60,7 @@ class WindowEntity {
       height.hashCode ^
       x.hashCode ^
       y.hashCode;
-  
+
   @override
   String toString() {
     return 'WindowEntity{isVisible: $isVisible, isFocused: $isFocused, isMinimized: $isMinimized, width: $width, height: $height, x: $x, y: $y}';

@@ -5,24 +5,24 @@ import 'package:custom_desktop/features/window_management/data/datasources/windo
 /// 윈도우 리포지터리 구현체
 class WindowRepositoryImpl implements WindowRepository {
   final WindowManagerDataSource dataSource;
-  
+
   WindowRepositoryImpl(this.dataSource);
-  
+
   @override
   Future<void> initialize() async {
     await dataSource.initialize();
   }
-  
+
   @override
   Future<void> show() async {
     await dataSource.show();
   }
-  
+
   @override
   Future<void> hide() async {
     await dataSource.hide();
   }
-  
+
   @override
   Future<void> toggle() async {
     final isCurrentlyVisible = await dataSource.isVisible();
@@ -32,18 +32,18 @@ class WindowRepositoryImpl implements WindowRepository {
       await dataSource.show();
     }
   }
-  
+
   @override
   Future<void> close() async {
     await dataSource.close();
   }
-  
+
   @override
   Future<WindowEntity> getWindowState() async {
     final isVisible = await dataSource.isVisible();
     final size = await dataSource.getSize();
     final position = await dataSource.getPosition();
-    
+
     return WindowEntity(
       isVisible: isVisible,
       isFocused: isVisible, // 간단한 구현
@@ -54,22 +54,22 @@ class WindowRepositoryImpl implements WindowRepository {
       y: position.dy,
     );
   }
-  
+
   @override
   Future<bool> isVisible() async {
     return await dataSource.isVisible();
   }
-  
+
   @override
   Future<void> focus() async {
     await dataSource.focus();
   }
-  
+
   @override
   Future<void> minimize() async {
     await dataSource.minimize();
   }
-  
+
   @override
   Future<void> maximize() async {
     await dataSource.maximize();

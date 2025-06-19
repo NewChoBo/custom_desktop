@@ -3,9 +3,9 @@ import 'package:custom_desktop/features/window_management/domain/repositories/wi
 /// 윈도우 표시 UseCase
 class ShowWindowUseCase {
   final WindowRepository repository;
-  
+
   ShowWindowUseCase(this.repository);
-  
+
   Future<void> call() async {
     await repository.show();
   }
@@ -14,9 +14,9 @@ class ShowWindowUseCase {
 /// 윈도우 숨기기 UseCase
 class HideWindowUseCase {
   final WindowRepository repository;
-  
+
   HideWindowUseCase(this.repository);
-  
+
   Future<void> call() async {
     await repository.hide();
   }
@@ -25,9 +25,9 @@ class HideWindowUseCase {
 /// 윈도우 토글 UseCase
 class ToggleWindowUseCase {
   final WindowRepository repository;
-  
+
   ToggleWindowUseCase(this.repository);
-  
+
   Future<void> call() async {
     await repository.toggle();
   }
@@ -36,9 +36,9 @@ class ToggleWindowUseCase {
 /// 앱 종료 UseCase
 class CloseAppUseCase {
   final WindowRepository repository;
-  
+
   CloseAppUseCase(this.repository);
-  
+
   Future<void> call() async {
     await repository.close();
   }
@@ -47,9 +47,9 @@ class CloseAppUseCase {
 /// 윈도우 초기화 UseCase
 class InitializeWindowUseCase {
   final WindowRepository repository;
-  
+
   InitializeWindowUseCase(this.repository);
-  
+
   Future<void> call() async {
     await repository.initialize();
   }

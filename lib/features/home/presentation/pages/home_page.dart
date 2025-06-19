@@ -28,10 +28,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         // AppBar를 80% 투명하게 설정 (20% 불투명도)
         backgroundColor: Colors.deepPurple.withValues(alpha: 0.2),
-        title: Text(
-          widget.title,
-          style: const TextStyle(color: Colors.white),
-        ),
+        title: Text(widget.title, style: const TextStyle(color: Colors.white)),
         // AppBar 그림자 제거
         elevation: 0,
         // 시스템 오버레이 스타일 설정
@@ -43,9 +40,9 @@ class _HomePageState extends State<HomePage> {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Colors.deepPurple.withValues(alpha: 0.3),  // 30% 불투명 보라색
-              Colors.blue.withValues(alpha: 0.2),        // 20% 불투명 파란색
+            colors: <Color>[
+              Colors.deepPurple.withValues(alpha: 0.3), // 30% 불투명 보라색
+              Colors.blue.withValues(alpha: 0.2), // 20% 불투명 파란색
               Colors.transparent,
             ],
           ),
