@@ -1,0 +1,15 @@
+{
+  "app": {
+    "name": "Custom Desktop",
+    "version": "1.0.0",
+    "environment": "development"
+  },
+  "window": {
+    "defaultWidth": 800,
+    "defaultHeight": 600,
+    "minWidth": 400,
+    "minHeight": 300,
+    "alwaysOnTop": false,
+    "showInTaskbar": true
+  }
+}

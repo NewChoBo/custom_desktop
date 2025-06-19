@@ -1,0 +1,18 @@
+{
+  "ui": {
+    "theme": "dark",
+    "language": "ko",
+    "fontSize": 14,
+    "showAnimations": true,
+    "compactMode": false
+  },
+  "window": {
+    "x": 100,
+    "y": 100,
+    "width": 800,
+    "height": 600,
+    "isMaximized": false,
+    "alwaysOnTop": false,
+    "opacity": 1.0
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "themes": {
+    "light": {
+      "name": "Light Theme",
+      "primaryColor": "#6200EA",
+      "backgroundColor": "#FFFFFF",
+      "surfaceColor": "#F5F5F5",
+      "textColor": "#212121",
+      "iconColor": "#424242"
+    },
+    "dark": {
+      "name": "Dark Theme",
+      "primaryColor": "#BB86FC",
+      "backgroundColor": "#121212",
+      "surfaceColor": "#1E1E1E",
+      "textColor": "#FFFFFF",
+      "iconColor": "#E0E0E0"
+    },
+    "blue": {
+      "name": "Blue Theme",
+      "primaryColor": "#2196F3",
+      "backgroundColor": "#FAFAFA",
+      "surfaceColor": "#E3F2FD",
+      "textColor": "#1565C0",
+      "iconColor": "#1976D2"
+    }
+  },
+  "iconStyles": {
+    "default": {
+      "size": 64,
+      "borderRadius": 8,
+      "shadow": true,
+      "hoverEffect": "scale"
+    },
+    "minimal": {
+      "size": 48,
+      "borderRadius": 0,
+      "shadow": false,
+      "hoverEffect": "opacity"
+    },
+    "rounded": {
+      "size": 64,
+      "borderRadius": 32,
+      "shadow": true,
+      "hoverEffect": "glow"
+    }
+  }
+}
