@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-/// 홈 화면 위젯
-/// 메인 UI 컴포넌트를 담당
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.title});
 

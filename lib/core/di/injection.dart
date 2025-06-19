@@ -7,22 +7,19 @@ import 'package:custom_desktop/features/system_tray/data/repositories/system_tra
 import 'package:custom_desktop/features/system_tray/domain/repositories/system_tray_repository.dart';
 import 'package:custom_desktop/features/system_tray/domain/usecases/system_tray_usecases.dart';
 
-/// 의존성 주입 컨테이너
 class DependencyInjection {
   static DependencyInjection? _instance;
   static DependencyInjection get instance =>
       _instance ??= DependencyInjection._();
 
   DependencyInjection._();
-  // Data Sources
+
   late final WindowManagerDataSource _windowManagerDataSource;
   late final SystemTrayDataSource _systemTrayDataSource;
 
-  // Repositories
   late final WindowRepository _windowRepository;
   late final SystemTrayRepository _systemTrayRepository;
 
-  // Use Cases
   late final InitializeWindowUseCase _initializeWindowUseCase;
   late final ShowWindowUseCase _showWindowUseCase;
   late final HideWindowUseCase _hideWindowUseCase;
@@ -34,17 +31,13 @@ class DependencyInjection {
   late final SetTrayContextMenuUseCase _setTrayContextMenuUseCase;
   late final PopUpTrayMenuUseCase _popUpTrayMenuUseCase;
 
-  /// 의존성 초기화
   void initialize() {
-    // Data Sources
     _windowManagerDataSource = WindowManagerDataSource();
     _systemTrayDataSource = SystemTrayDataSource();
 
-    // Repositories
     _windowRepository = WindowRepositoryImpl(_windowManagerDataSource);
     _systemTrayRepository = SystemTrayRepositoryImpl(_systemTrayDataSource);
 
-    // Use Cases
     _initializeWindowUseCase = InitializeWindowUseCase(_windowRepository);
     _showWindowUseCase = ShowWindowUseCase(_windowRepository);
     _hideWindowUseCase = HideWindowUseCase(_windowRepository);
@@ -61,7 +54,6 @@ class DependencyInjection {
     _popUpTrayMenuUseCase = PopUpTrayMenuUseCase(_systemTrayRepository);
   }
 
-  // Getters
   WindowManagerDataSource get windowManagerDataSource =>
       _windowManagerDataSource;
   SystemTrayDataSource get systemTrayDataSource => _systemTrayDataSource;

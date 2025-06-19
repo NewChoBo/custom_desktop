@@ -4,7 +4,6 @@ import 'package:custom_desktop/features/window_management/domain/entities/window
 import 'package:custom_desktop/features/window_management/domain/repositories/window_repository.dart';
 import 'package:custom_desktop/features/window_management/data/datasources/window_manager_datasource.dart';
 
-/// 윈도우 리포지터리 구현체
 class WindowRepositoryImpl implements WindowRepository {
   final WindowManagerDataSource dataSource;
 
