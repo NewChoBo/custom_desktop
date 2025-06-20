@@ -45,20 +45,29 @@ class TrayApp extends StatefulWidget {
   State<TrayApp> createState() => _TrayAppState();
 }
 
-class _TrayAppState extends State<TrayApp> with TrayListener {
+class _TrayAppState extends State<TrayApp>
+    with TrayListener, WidgetsBindingObserver {
   final WindowManagementService _windowService = WindowManagementService();
-
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     trayManager.addListener(this);
     _init();
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     trayManager.removeListener(this);
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.detached) {
+      _handleAppExit();
+    }
   }
 
   void _init() async {
@@ -133,11 +142,32 @@ class _TrayAppState extends State<TrayApp> with TrayListener {
   @override
   void onTrayMenuItemClick(MenuItem menuItem) {
     if (menuItem.key == 'exit') {
-      _windowService.dispose();
-      exit(0);
+      _handleAppExit();
     } else {
       // 윈도우 열기
       _openWindow(menuItem.key!);
+    }
+  }
+
+  Future<void> _handleAppExit() async {
+    try {
+      print('앱 종료 시작...');
+      // 1. 모든 윈도우 정리
+      await _windowService.closeAllWindows();
+      await _windowService.dispose();
+
+      // 2. 트레이 리스너 정리
+      trayManager.removeListener(this);
+
+      // 3. 트레이 매니저 정리
+      await trayManager.destroy();
+
+      print('리소스 정리 완료');
+    } catch (e) {
+      print('리소스 정리 중 오류: $e');
+    } finally {
+      // 4. 프로세스 종료
+      exit(0);
     }
   }
 

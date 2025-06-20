@@ -168,8 +168,14 @@ class WindowManagementService {
   }
 
   // 리소스 정리
-  void dispose() {
-    closeAllWindows();
-    _openWindows.clear();
+  Future<void> dispose() async {
+    print('WindowManagementService 정리 시작...');
+    try {
+      await closeAllWindows();
+      _openWindows.clear();
+      print('WindowManagementService 정리 완료');
+    } catch (e) {
+      print('WindowManagementService 정리 중 오류: $e');
+    }
   }
 }
