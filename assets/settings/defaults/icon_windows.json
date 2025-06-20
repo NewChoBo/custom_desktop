@@ -1,0 +1,100 @@
+{
+  "icon_windows": [
+    {
+      "id": "productivity",
+      "title": "생산성 도구",
+      "width": 800,
+      "height": 600,
+      "grid_columns": 4,
+      "icon_size": 64,
+      "icons": [
+        {
+          "name": "계산기",
+          "icon": "calculator.png",
+          "path": "C:/Windows/System32/calc.exe",
+          "arguments": ""
+        },
+        {
+          "name": "메모장",
+          "icon": "notepad.png",
+          "path": "C:/Windows/System32/notepad.exe",
+          "arguments": ""
+        },
+        {
+          "name": "작업 관리자",
+          "icon": "taskmgr.png",
+          "path": "C:/Windows/System32/taskmgr.exe",
+          "arguments": ""
+        },
+        {
+          "name": "제어판",
+          "icon": "control.png",
+          "path": "C:/Windows/System32/control.exe",
+          "arguments": ""
+        },
+        {
+          "name": "명령 프롬프트",
+          "icon": "cmd.png",
+          "path": "C:/Windows/System32/cmd.exe",
+          "arguments": ""
+        },
+        {
+          "name": "레지스트리 편집기",
+          "icon": "regedit.png",
+          "path": "C:/Windows/regedit.exe",
+          "arguments": ""
+        }
+      ]
+    },
+    {
+      "id": "development",
+      "title": "개발 도구",
+      "width": 900,
+      "height": 700,
+      "grid_columns": 5,
+      "icon_size": 72,
+      "icons": [
+        {
+          "name": "VS Code",
+          "icon": "vscode.png",
+          "path": "C:/Users/%USERNAME%/AppData/Local/Programs/Microsoft VS Code/Code.exe",
+          "arguments": ""
+        },
+        {
+          "name": "Git Bash",
+          "icon": "git.png",
+          "path": "C:/Program Files/Git/bin/bash.exe",
+          "arguments": ""
+        },
+        {
+          "name": "PowerShell",
+          "icon": "powershell.png",
+          "path": "C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe",
+          "arguments": ""
+        }
+      ]
+    },
+    {
+      "id": "games",
+      "title": "게임 & 엔터테인먼트",
+      "width": 700,
+      "height": 500,
+      "grid_columns": 3,
+      "icon_size": 80,
+      "icons": [
+        {
+          "name": "지뢰찾기",
+          "icon": "minesweeper.png",
+          "path": "ms-windows-store://pdp/?productid=9WZDNCRFHWCN",
+          "arguments": ""
+        },
+        {
+          "name": "카드 게임",
+          "icon": "solitaire.png",
+          "path": "ms-windows-store://pdp/?productid=9WZDNCRFHWD2",
+          "arguments": ""
+        }
+      ]
+    }
+  ]
+}
