@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:custom_desktop/services/window_service.dart';
 import 'package:custom_desktop/services/tray_service.dart';
+import 'package:custom_desktop/services/log_service.dart';
 import 'package:custom_desktop/utils/constants.dart';
 
 /// 홈 페이지 - 앱의 메인 화면
@@ -75,6 +76,7 @@ class _HomePageState extends State<HomePage> {
                   // 창 숨기기 버튼
                   ElevatedButton.icon(
                     onPressed: () {
+                      LogService.instance.userAction('창 숨기기 버튼 클릭');
                       WindowService.instance.hideWindow();
                     },
                     icon: const Icon(Icons.visibility_off),
@@ -84,11 +86,10 @@ class _HomePageState extends State<HomePage> {
                       foregroundColor: Colors.white,
                     ),
                   ),
-                  const SizedBox(width: 20),
-
-                  // 앱 종료 버튼
+                  const SizedBox(width: 20), // 앱 종료 버튼
                   ElevatedButton.icon(
                     onPressed: () {
+                      LogService.instance.userAction('앱 종료 버튼 클릭');
                       _showExitDialog();
                     },
                     icon: const Icon(Icons.exit_to_app),
@@ -109,6 +110,7 @@ class _HomePageState extends State<HomePage> {
 
   /// 종료 확인 다이얼로그
   void _showExitDialog() {
+    LogService.instance.userAction('종료 확인 다이얼로그 표시');
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -122,12 +124,14 @@ class _HomePageState extends State<HomePage> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
+                LogService.instance.userAction('종료 취소');
                 Navigator.of(context).pop();
               },
               child: const Text('취소'),
             ),
             TextButton(
               onPressed: () {
+                LogService.instance.userAction('종료 확인');
                 Navigator.of(context).pop();
                 TrayService.instance.dispose();
                 WindowService.instance.closeApp();

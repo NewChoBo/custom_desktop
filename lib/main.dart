@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:custom_desktop/app.dart';
+import 'package:custom_desktop/services/log_service.dart';
 import 'package:custom_desktop/services/window_service.dart';
 import 'package:custom_desktop/services/tray_service.dart';
 
@@ -14,20 +15,22 @@ Future<void> main() async {
   // Flutter 엔진 초기화
   WidgetsFlutterBinding.ensureInitialized();
 
-  print('🔧 앱 초기화 중...');
+  // 로깅 서비스 초기화
+  LogService.instance.initialize();
+  LogService.instance.startup('앱 초기화 시작');
 
   try {
     // 윈도우 서비스 초기화 (창 크기, 위치 등 설정)
     await WindowService.instance.initialize();
-    print('✅ 윈도우 서비스 초기화 완료');
+    LogService.instance.startup('윈도우 서비스 초기화 완료');
 
     // 트레이 서비스 초기화 (시스템 트레이 아이콘, 메뉴 설정)
     await TrayService.instance.initialize();
-    print('✅ 트레이 서비스 초기화 완료');
+    LogService.instance.startup('트레이 서비스 초기화 완료');
 
-    print('🎉 모든 초기화 완료! 앱을 시작합니다.');
-  } catch (e) {
-    print('❌ 초기화 중 오류 발생: $e');
+    LogService.instance.startup('모든 초기화 완료! 앱을 시작합니다');
+  } catch (e, stackTrace) {
+    LogService.instance.error('초기화 중 오류 발생', e, stackTrace);
   }
 
   // 앱 실행
