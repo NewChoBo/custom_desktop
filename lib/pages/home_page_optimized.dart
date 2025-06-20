@@ -206,20 +206,8 @@ class HomePage extends StatelessWidget {
       // Row 대신 Wrap 사용으로 반응형 개선
       spacing: 20,
       runSpacing: 12,
-      alignment: WrapAlignment.center,      children: <Widget>[
-        // 새 창 생성 버튼 (MultiWindow 테스트)
-        ElevatedButton.icon(
-          onPressed: () {
-            LogService.instance.userAction('새 창 생성 버튼 클릭');
-            _createNewWindow(context);
-          },
-          icon: const Icon(Icons.add_box_outlined),
-          label: const Text('새 창'),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: colorScheme.secondary,
-            foregroundColor: colorScheme.onSecondary,
-          ),
-        ),
+      alignment: WrapAlignment.center,
+      children: <Widget>[
         // 창 숨기기 버튼
         ElevatedButton.icon(
           onPressed: () {
@@ -405,109 +393,6 @@ class HomePage extends StatelessWidget {
                 backgroundColor: theme.colorScheme.primary,
                 foregroundColor: theme.colorScheme.onPrimary,
               ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  /// 새 창 생성 (MultiWindow 테스트)
-  static void _createNewWindow(BuildContext context) async {
-    try {
-      LogService.instance.userAction('새 창 생성 시도');
-      
-      // MultiWindowService 사용 예시
-      // 실제로는 MultiWindowService.instance.createNewWindow() 사용
-      LogService.instance.info('새 창 생성 기능 - 구현 중...');
-      
-      // 현재는 안내 다이얼로그만 표시
-      _showMultiWindowInfoDialog(context);
-      
-    } catch (e, stackTrace) {
-      LogService.instance.error('새 창 생성 실패', e, stackTrace);
-    }
-  }
-
-  /// MultiWindow 기능 안내 다이얼로그
-  static void _showMultiWindowInfoDialog(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    
-    showDialog(
-      context: context,
-      builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          backgroundColor: theme.colorScheme.surface,
-          title: Row(
-            children: <Widget>[
-              const Icon(Icons.web_stories_outlined, size: 20),
-              const SizedBox(width: 8),
-              Text(
-                'MultiWindow 기능',
-                style: TextStyle(
-                  color: theme.textTheme.titleLarge?.color,
-                ),
-              ),
-            ],
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                '🎯 MultiWindow + Tray 동작 원리:',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: theme.textTheme.bodyMedium?.color,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: theme.colorScheme.primary.withValues(alpha: 0.3),
-                  ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      '✅ 여러 창을 열어도 트레이 아이콘은 하나만 표시됩니다',
-                      style: TextStyle(
-                        color: theme.textTheme.bodySmall?.color,
-                        fontSize: 13,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '✅ TrayService가 Singleton 패턴으로 구현되어 있습니다',
-                      style: TextStyle(
-                        color: theme.textTheme.bodySmall?.color,
-                        fontSize: 13,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '✅ 앱 프로세스 전체에 대해 하나의 트레이만 관리됩니다',
-                      style: TextStyle(
-                        color: theme.textTheme.bodySmall?.color,
-                        fontSize: 13,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(dialogContext).pop();
-              },
-              child: const Text('확인'),
             ),
           ],
         );

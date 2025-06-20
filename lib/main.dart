@@ -3,6 +3,7 @@ import 'package:custom_desktop/app.dart';
 import 'package:custom_desktop/services/log_service.dart';
 import 'package:custom_desktop/services/window_service.dart';
 import 'package:custom_desktop/services/tray_service.dart';
+import 'package:custom_desktop/services/theme_service.dart';
 
 /// 🚀 앱 시작점
 ///
@@ -18,8 +19,11 @@ Future<void> main() async {
   // 로깅 서비스 초기화
   LogService.instance.initialize();
   LogService.instance.startup('앱 초기화 시작');
-
   try {
+    // 테마 서비스 초기화 (config에서 테마 정보 로드)
+    await ThemeService.instance.initialize();
+    LogService.instance.startup('테마 서비스 초기화 완료');
+
     // 윈도우 서비스 초기화 (창 크기, 위치 등 설정)
     await WindowService.instance.initialize();
     LogService.instance.startup('윈도우 서비스 초기화 완료');

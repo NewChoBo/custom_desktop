@@ -9,94 +9,6 @@
 - 🎨 **투명 배경** - 시스템과 자연스럽게 블렌딩
 - 📱 **트레이 통합** - 백그라운드에서 실행, 트레이에서 제어
 
-## 📁 프로젝트 구조
-
-```
-lib/
-├── main.dart              # 🚀 앱 시작점 (가장 먼저 실행)
-├── app.dart              # ⚙️ 앱 기본 설정 (테마, 제목 등)
-├── pages/                # 📄 화면들
-│   └── home_page.dart    #    └── 메인 화면
-├── services/             # 🔧 핵심 기능들
-│   ├── window_service.dart #    ├── 창 관리 (열기/닫기/크기조절)
-│   └── tray_service.dart   #    └── 시스템 트레이 (아이콘/메뉴)
-└── utils/                # 🛠️ 도구들
-    └── constants.dart    #    └── 상수 모음 (텍스트, 크기 등)
-```
-
-## 🎯 각 파일의 역할
-
-### 📱 main.dart - 앱 시작점
-
-- Flutter 초기화
-- 윈도우 서비스 설정
-- 트레이 서비스 설정
-- 앱 실행
-
-### 🏠 pages/home_page.dart - 메인 화면
-
-- 사용자가 보는 메인 UI
-- 창 숨기기/종료 버튼
-- 투명 배경 + 그라데이션 효과
-
-### 🪟 services/window_service.dart - 창 관리
-
-- 창 열기/닫기
-- 창 크기/위치 설정
-- 창 표시/숨기기 토글
-
-### 🔔 services/tray_service.dart - 시스템 트레이
-
-- 트레이 아이콘 설정
-- 우클릭 메뉴 생성
-- 트레이 클릭 이벤트 처리
-
-### 📋 utils/constants.dart - 상수 관리
-
-- 앱 제목, 창 크기
-- 메뉴 텍스트들
-- 파일 경로들
-  │ ├── data/
-  │ │ ├── datasources/
-  │ │ │ └── window_manager_datasource.dart
-  │ │ └── repositories/
-  │ │ └── window_repository_impl.dart
-  │ ├── domain/
-  │ │ ├── entities/
-  │ │ │ └── window_entity.dart
-  │ │ ├── repositories/
-  │ │ │ └── window_repository.dart
-  │ │ └── usecases/
-  │ │ └── window_usecases.dart
-  │ └── presentation/
-  │ ├── pages/
-  │ ├── widgets/
-  │ └── providers/
-  ├── system_tray/ # System tray feature
-  │ ├── data/
-  │ │ ├── datasources/
-  │ │ │ └── system_tray_datasource.dart
-  │ │ └── repositories/
-  │ │ └── system_tray_repository_impl.dart
-  │ ├── domain/
-  │ │ ├── entities/
-  │ │ │ └── system_tray_entity.dart
-  │ │ ├── repositories/
-  │ │ │ └── system_tray_repository.dart
-  │ │ └── usecases/
-  │ │ └── system_tray_usecases.dart
-  │ └── presentation/
-  │ └── providers/
-  │ └── system_tray_event_handler.dart
-  └── home/ # Home screen feature
-  ├── data/
-  ├── domain/
-  └── presentation/
-  └── pages/
-  └── home_page.dart
-
-````
-
 ## 🚀 Features
 
 - **Window Management**: Control window visibility, size, and position
@@ -109,11 +21,13 @@ lib/
 ### Clean Architecture Layers
 
 1. **Domain Layer** (`domain/`)
+
    - Entities: Core business objects
    - Repositories: Abstract contracts for data access
    - Use Cases: Business logic implementations
 
 2. **Data Layer** (`data/`)
+
    - Data Sources: External data access (APIs, local storage, etc.)
    - Repository Implementations: Concrete implementations of domain repositories
 
@@ -142,7 +56,7 @@ import 'package:custom_desktop/features/window_management/domain/entities/window
 // ❌ Avoid: Relative imports
 import '../../../core/constants/app_constants.dart';
 import '../../domain/entities/window_entity.dart';
-````
+```
 
 ## 📦 Dependencies
 

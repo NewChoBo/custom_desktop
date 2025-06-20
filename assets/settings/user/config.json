@@ -1,7 +1,7 @@
 {
   "ui": {
-    "theme": "dark",
-    "language": "ko",
+    "theme": "blue",
+    "language": "en",
     "fontSize": 14,
     "showAnimations": true,
     "compactMode": false
